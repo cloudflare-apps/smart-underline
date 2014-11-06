@@ -46,6 +46,37 @@ h1 a:visited {
   color: inherit;
   text-decoration: none;
 }
+.share {
+  margin: 1em auto;
+  font-size: 0;
+  text-align: center;
+}
+.share iframe {
+  display: inline-block;
+  vertical-align: middle;
+  background: #eee;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 0;
+  height: 2.3rem;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+}
+.share iframe:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.share iframe.github {
+  width: 12rem;
+  margin-right: 1rem;
+}
+.share iframe.twitter {
+  width: 8.5rem;
+}
 h2 a,
 h2 a:visited {
   color: inherit;
@@ -149,4 +180,13 @@ section.limitations {
 }
 section.limitations a {
   color: #5a2f16;
+}
+footer {
+  text-align: center;
+}
+footer p {
+  text-indent: 0;
+}
+footer a.eager {
+  color: #e90f92;
 }

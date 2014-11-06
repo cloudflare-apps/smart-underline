@@ -44,6 +44,32 @@ h1
       color inherit
       text-decoration none
 
+.share
+  margin 1em auto
+  font-size 0
+  text-align center
+
+  iframe
+    display inline-block
+    vertical-align middle
+    background #eee
+    border-radius 5px
+    margin-left auto
+    margin-right auto
+    border 0
+    height 2.3rem
+    opacity 0.8
+
+    &:hover
+      opacity 1
+
+    &.github
+      width 12rem
+      margin-right 1rem
+
+    &.twitter
+      width 8.5rem
+
 h2 a
 
   &, &:visited
@@ -143,3 +169,12 @@ section
 
     a
       color darken(#713b1b, 20%)
+
+footer
+  text-align center
+
+  p
+    text-indent 0
+
+  a.eager
+    color #e90f92
