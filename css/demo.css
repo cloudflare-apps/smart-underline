@@ -59,12 +59,18 @@ h3 {
   text-align: center;
   font-size: 1em;
   font-family: Futura, sans-serif;
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.25em;
   text-indent: 0.25em;
   padding-top: 3.75em;
   margin: 0 auto;
   margin-bottom: 1.5em;
+}
+@media (max-width: 768px) {
+  h3 {
+    font-weight: normal;
+  }
 }
 p {
   text-indent: 1.5em;
@@ -88,6 +94,10 @@ p.example {
 p.example > span:nth-child(2) {
   margin-left: 2em;
 }
+p.example.rtl > span:nth-child(2) {
+  margin-right: 2em;
+  margin-left: 0;
+}
 @media (max-width: 768px) {
   p.example {
     font-size: 1em;
@@ -99,6 +109,9 @@ p.example > span:nth-child(2) {
   p.example > span:nth-child(2) {
     padding-top: 0.75em;
     margin-left: 0;
+  }
+  p.example.rtl > span:nth-child(2) {
+    margin-right: 0;
   }
 }
 section {
