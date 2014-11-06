@@ -81,7 +81,7 @@ section {
   border-radius: 0.3125em;
 }
 section h3 {
-  padding-top: 0;
+  padding-top: 0.5em;
 }
 section > *:first-child {
   margin-top: 0;
@@ -97,9 +97,9 @@ section.about a {
   color: #262c6b;
 }
 section.limitations {
-  background: #fcffdd;
-  color: #864d30;
+  background: #fff5d6;
+  color: #713b1b;
 }
 section.limitations a {
-  color: #6b3e26;
+  color: #5a2f16;
 }
