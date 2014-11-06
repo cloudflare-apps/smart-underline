@@ -27,20 +27,20 @@ html
         | for free on the <a href="https://eager.io">Eager App Store</a>.
 
     section.limitations
-      h3 Known limitations
+      h3 Notes
 
       p
         | While SmartUnderline works great on blogs and in other controlled-text enironments,
-        | it has performance considerations and limitations which prevent it from being
-        | an all-purpose link styling option.
+        | there are a few things you should be aware of when considering using SmartUnderline
+        | on your website.
 
       ul
         li
           | It requires that the text be on top of a solid background color.
         li
-          | It has performance considerations due to its heavy use of text-shadow.
-        li
           | It makes an assumption about selection color, which is OS- and browser-dependent.
+        li
+          | Each smart-underlined link has 12 text-shadows drawn underneath it, which could potentially have performance penalties on mobile or older devices.
 
       p
         | Read more about <a href="https://eager.io/blog">SmartUnderline on the Eager blog →</a>
