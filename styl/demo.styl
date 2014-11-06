@@ -1,0 +1,101 @@
+@import nib
+
+@import url("http://fonts.googleapis.com/css?family=Merriweather:400")
+
+html
+  font-size 16px
+
+  @media (min-width 1681px)
+    font-size 20px
+
+a:focus
+  outline thin dotted
+
+body
+  -webkit-font-smoothing antialiased
+  font-family "Merriweather", serif
+  color #000
+  width 36em
+  max-width 100%
+  padding 1em
+  -webkit-box-sizing border-box
+  -moz-box-sizing border-box
+  box-sizing border-box
+  margin-left auto
+  margin-right auto
+
+header
+  text-align center
+
+h1
+  padding-top 2em
+  font-size 1.875em
+  font-family Futura, sans-serif
+  font-weight normal
+  letter-spacing .04em
+  text-indent .04em
+
+  @media (max-width 768px)
+    padding-top 0
+
+  a
+
+    &, &:visited
+      color inherit
+      text-decoration none
+
+h2 a
+
+  &, &:visited
+    color inherit
+
+h1 + h2
+  font-size 1em
+  font-weight normal
+  margin-top 0
+
+h3
+  text-align center
+  font-size 1em
+  font-family Futura, sans-serif
+  text-transform uppercase
+  letter-spacing .25em
+  text-indent .25em
+  padding-top 3.75em
+  margin 0 auto
+  margin-bottom 1.5em
+
+p
+  text-indent 1.5em
+  margin 1em 0
+
+p, ul
+  line-height 1.8em
+
+section
+  margin 2em auto
+  padding 1.5em
+  border-radius .3125em
+
+  h3
+    padding-top 0
+
+  > *:first-child
+    margin-top 0
+
+  > *:last-child
+    margin-bottom 0
+
+  &.about
+    background #ddedff
+    color #303786
+
+    a
+      color darken(#303786, 20%)
+
+  &.limitations
+    background #fcffdd
+    color #864d30
+
+    a
+      color darken(#864d30, 20%)

@@ -1,0 +1,105 @@
+@import url("http://fonts.googleapis.com/css?family=Merriweather:400");
+html {
+  font-size: 16px;
+}
+@media (min-width: 1681px) {
+  html {
+    font-size: 20px;
+  }
+}
+a:focus {
+  outline: thin dotted;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  font-family: "Merriweather", serif;
+  color: #000;
+  width: 36em;
+  max-width: 100%;
+  padding: 1em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+header {
+  text-align: center;
+}
+h1 {
+  padding-top: 2em;
+  font-size: 1.875em;
+  font-family: Futura, sans-serif;
+  font-weight: normal;
+  letter-spacing: 0.04em;
+  text-indent: 0.04em;
+}
+@media (max-width: 768px) {
+  h1 {
+    padding-top: 0;
+  }
+}
+h1 a,
+h1 a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+h2 a,
+h2 a:visited {
+  color: inherit;
+}
+h1 + h2 {
+  font-size: 1em;
+  font-weight: normal;
+  margin-top: 0;
+}
+h3 {
+  text-align: center;
+  font-size: 1em;
+  font-family: Futura, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  text-indent: 0.25em;
+  padding-top: 3.75em;
+  margin: 0 auto;
+  margin-bottom: 1.5em;
+}
+p {
+  text-indent: 1.5em;
+  margin: 1em 0;
+}
+p,
+ul {
+  line-height: 1.8em;
+}
+section {
+  margin: 2em auto;
+  padding: 1.5em;
+  -webkit-border-radius: 0.3125em;
+  border-radius: 0.3125em;
+}
+section h3 {
+  padding-top: 0;
+}
+section > *:first-child {
+  margin-top: 0;
+}
+section > *:last-child {
+  margin-bottom: 0;
+}
+section.about {
+  background: #ddedff;
+  color: #303786;
+}
+section.about a {
+  color: #262c6b;
+}
+section.limitations {
+  background: #fcffdd;
+  color: #864d30;
+}
+section.limitations a {
+  color: #6b3e26;
+}
