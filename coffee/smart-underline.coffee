@@ -43,6 +43,13 @@ getBackgroundColorNode = (node) ->
   else
     return node
 
+getBackgroundColor = (node) ->
+  backgroundColor = getComputedStyle(node).backgroundColor
+  if node is document.documentElement and isTransparent backgroundColor
+    return 'rgb(255, 255, 255)'
+  else
+    return backgroundColor
+
 getLinkColor = (node) ->
   getComputedStyle(node).color
 
@@ -80,7 +87,7 @@ init = (options) ->
     linkColors = {}
     linkColors[getLinkColor link] = true for link in container.links
 
-    backgroundColor = getComputedStyle(container.container).backgroundColor
+    backgroundColor = getBackgroundColor container.container
 
     for color of linkColors
       linkSelector = """[#{ linkContainerIdDataAttributeName }="#{ id }"] a[#{ linkColorDataAttributeName }="#{ color }"]"""

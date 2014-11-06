@@ -1,5 +1,5 @@
 (function() {
-  var getBackgroundColorNode, getLinkColor, init, isTransparent, linkColorDataAttributeName, linkContainerIdDataAttributeName, selectionColor, styleEl, uniqueLinkContainerID;
+  var getBackgroundColor, getBackgroundColorNode, getLinkColor, init, isTransparent, linkColorDataAttributeName, linkContainerIdDataAttributeName, selectionColor, styleEl, uniqueLinkContainerID;
 
   window.SmartUnderline = {
     init: function() {},
@@ -59,6 +59,16 @@
     }
   };
 
+  getBackgroundColor = function(node) {
+    var backgroundColor;
+    backgroundColor = getComputedStyle(node).backgroundColor;
+    if (node === document.documentElement && isTransparent(backgroundColor)) {
+      return 'rgb(255, 255, 255)';
+    } else {
+      return backgroundColor;
+    }
+  };
+
   getLinkColor = function(node) {
     return getComputedStyle(node).color;
   };
@@ -106,7 +116,7 @@
         link = _ref[_k];
         linkColors[getLinkColor(link)] = true;
       }
-      backgroundColor = getComputedStyle(container.container).backgroundColor;
+      backgroundColor = getBackgroundColor(container.container);
       for (color in linkColors) {
         linkSelector = "[" + linkContainerIdDataAttributeName + "=\"" + id + "\"] a[" + linkColorDataAttributeName + "=\"" + color + "\"]";
         styles += "" + linkSelector + ", " + linkSelector + ":visited {\n  color: " + color + ";\n  text-decoration: none !important;\n  text-shadow: 0.03em 0 " + backgroundColor + ", -0.03em 0 " + backgroundColor + ", 0 0.03em " + backgroundColor + ", 0 -0.03em " + backgroundColor + ", 0.06em 0 " + backgroundColor + ", -0.06em 0 " + backgroundColor + ", 0.09em 0 " + backgroundColor + ", -0.09em 0 " + backgroundColor + ", 0.12em 0 " + backgroundColor + ", -0.12em 0 " + backgroundColor + ", 0.15em 0 " + backgroundColor + ", -0.15em 0 " + backgroundColor + ";\n  background-color: transparent;\n  background-image: -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + color + ", " + color + ");\n  background-image: -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + color + ", " + color + ");\n  background-image: -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + color + ", " + color + ");\n  background-image: -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + color + ", " + color + ");\n  background-image: linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + color + ", " + color + ");\n  -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-repeat: no-repeat, no-repeat, repeat-x;\n  background-position: 0% 93%, 100% 93%, 0% 93%;\n}\n\n@media screen and (-webkit-min-device-pixel-ratio: 0) {\n  " + linkSelector + " {\n    background-position-y: 87%, 87%, 87%;\n  }\n}\n\n" + linkSelector + "::selection {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}\n\n" + linkSelector + "::-moz-selection {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}";
