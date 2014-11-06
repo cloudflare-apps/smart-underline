@@ -1,0 +1,11 @@
+{
+  "name": "SmartUnderline",
+  "version": "1.0.0",
+  "private": true,
+  "ignore": [
+    "coffee/",
+    "jade/",
+    "styl/",
+    "node_modules/",
+  ]
+}
