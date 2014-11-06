@@ -72,6 +72,31 @@ p
 p, ul
   line-height 1.8em
 
+p.example-header
+  text-indent 0
+  margin-top 2.25em
+  text-align center
+
+p.example
+  text-indent 0
+  font-size 1.5em
+  text-align center
+  margin .666em 0
+
+  > span:nth-child(2)
+    margin-left 2em
+
+  @media (max-width 768px)
+    font-size 1em
+    margin 2em 0
+
+    > span
+      display block
+
+      &:nth-child(2)
+        padding-top .75em
+        margin-left 0
+
 section
   margin 2em auto
   padding 1.5em
@@ -92,6 +117,13 @@ section
 
     a
       color darken(#303786, 20%)
+
+  &.before-and-after
+    background #bbf0c7
+    color #278541
+
+    a
+      color darken(#278541, 20%)
 
   &.limitations
     background #fff5d6

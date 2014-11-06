@@ -26,6 +26,60 @@ html
         | <a href="https://github.com/EagerIO/SmartUnderline">GitHub</a> or installed
         | for free on the <a href="https://eager.io">Eager App Store</a>.
 
+      p
+        | SmartUnderline works by searching your page for links which have a CSS underline
+        | applied with text-decoration, and replaces the text-decoration with a smarter line
+        | drawn in such a way that it gets cleared by the descenders—of glyphs such as "g",
+        | "j", and others—for more readable and beautiful links.
+
+    section.before-and-after
+      h3 Examples
+
+      p.example-header
+        | Some before-and-after examples.
+
+      style.
+        html body section.before-and-after p.example a.no-smart-underline {
+          text-decoration: underline !important;
+          background: none !important;
+          text-shadow: none !important;
+        }
+
+      p.example
+        span
+          a.no-smart-underline(href="")
+            | Intriguing, eh?
+
+        span
+          a(href="")
+            | Intriguing, eh?
+
+      p.example
+        span
+          a.no-smart-underline(href="")
+            | Jagged quitting
+
+        span
+          a(href="")
+            | Jagged quitting
+
+      p.example
+        span
+          a.no-smart-underline(href="")
+            | Illegal styles
+
+        span
+          a(href="")
+            | Illegal styles
+
+      p.example-header
+        | And one more for some fun. :)
+
+      p.example
+        span
+          a(href="")
+            | 50 ways of joyfully piquing intrigue
+
     section.limitations
       h3 Notes
 
