@@ -6,6 +6,8 @@ return unless window['getComputedStyle'] and document.documentElement.getAttribu
 
 selectionColor = '#b4d5fe'
 linkColorDataAttributeName = 'data-smart-underline-link-color'
+linkSmallDataAttributeName = 'data-smart-underline-link-small'
+linkLargeDataAttributeName = 'data-smart-underline-link-large'
 linkContainerIdDataAttributeName = 'data-smart-underline-container-id'
 uniqueLinkContainerID = do ->
   id = 0
@@ -59,27 +61,32 @@ init = (options) ->
   links = document.querySelectorAll "#{ if options.location then options.location + ' ' else '' }a"
   return unless links.length
 
-  underlinedLinks = []
-  for link in links
-    if getComputedStyle(link).textDecoration is 'underline'
-      underlinedLinks.push link
-
   linkContainers = {}
-  for link in underlinedLinks
-    container = getBackgroundColorNode link
+  for link in links
+    style = getComputedStyle link
+    fontSize = parseFloat style.fontSize
+    if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 8
+      container = getBackgroundColorNode link
 
-    if container
-      link.setAttribute linkColorDataAttributeName, getLinkColor(link)
-      id = container.getAttribute linkContainerIdDataAttributeName
+      if container
+        link.setAttribute linkColorDataAttributeName, getLinkColor(link)
 
-      if id
-        linkContainers[id].links.push link
-      else
-        id = uniqueLinkContainerID()
-        container.setAttribute linkContainerIdDataAttributeName, id
-        linkContainers[id] =
-          container: container
-          links: [link]
+        if fontSize <= 14
+          link.setAttribute linkSmallDataAttributeName, ''
+
+        if fontSize >= 20
+          link.setAttribute linkLargeDataAttributeName, ''
+
+        id = container.getAttribute linkContainerIdDataAttributeName
+
+        if id
+          linkContainers[id].links.push link
+        else
+          id = uniqueLinkContainerID()
+          container.setAttribute linkContainerIdDataAttributeName, id
+          linkContainers[id] =
+            container: container
+            links: [link]
 
   styles = ''
 
@@ -91,6 +98,9 @@ init = (options) ->
 
     for color of linkColors
       linkSelector = """[#{ linkContainerIdDataAttributeName }="#{ id }"] a[#{ linkColorDataAttributeName }="#{ color }"]"""
+      linkSmallSelector = """#{ linkSelector }[#{ linkSmallDataAttributeName }]"""
+      linkLargeSelector = """#{ linkSelector }[#{ linkLargeDataAttributeName }]"""
+
       styles += """
         #{ linkSelector }, #{ linkSelector }:visited {
           color: #{ color };
@@ -106,13 +116,15 @@ init = (options) ->
           -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
           background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
           background-repeat: no-repeat, no-repeat, repeat-x;
-          background-position: 0% 93%, 100% 93%, 0% 93%;
+          background-position: 0% 90%, 100% 90%, 0% 90%;
         }
 
-        @media screen and (-webkit-min-device-pixel-ratio: 0) {
-          #{ linkSelector } {
-            background-position-y: 87%, 87%, 87%;
-          }
+        #{ linkSmallSelector } {
+          background-position: 0% 96%, 100% 96%, 0% 96%;
+        }
+
+        #{ linkLargeSelector } {
+          background-position: 0% 87%, 100% 87%, 0% 87%;
         }
 
         #{ linkSelector }::selection {
