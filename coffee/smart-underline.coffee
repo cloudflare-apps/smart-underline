@@ -5,10 +5,15 @@ window.SmartUnderline =
 return unless window['getComputedStyle'] and document.documentElement.getAttribute
 
 selectionColor = '#b4d5fe'
-linkColorDataAttributeName = 'data-smart-underline-link-color'
-linkSmallDataAttributeName = 'data-smart-underline-link-small'
-linkLargeDataAttributeName = 'data-smart-underline-link-large'
-linkContainerIdDataAttributeName = 'data-smart-underline-container-id'
+
+linkColorAttrName = 'data-smart-underline-link-color'
+linkSmallAttrName = 'data-smart-underline-link-small'
+linkLargeAttrName = 'data-smart-underline-link-large'
+linkContainerIdAttrName = 'data-smart-underline-container-id'
+
+performanceTimes = []
+time = -> + new Date
+
 uniqueLinkContainerID = do ->
   id = 0
   return -> id += 1
@@ -55,9 +60,11 @@ getBackgroundColor = (node) ->
 getLinkColor = (node) ->
   getComputedStyle(node).color
 
-styleEl = document.createElement 'style'
+styleNode = document.createElement 'style'
 
 init = (options) ->
+  startTime = time()
+
   links = document.querySelectorAll "#{ if options.location then options.location + ' ' else '' }a"
   return unless links.length
 
@@ -69,21 +76,21 @@ init = (options) ->
       container = getBackgroundColorNode link
 
       if container
-        link.setAttribute linkColorDataAttributeName, getLinkColor(link)
+        link.setAttribute linkColorAttrName, getLinkColor(link)
 
         if fontSize <= 14
-          link.setAttribute linkSmallDataAttributeName, ''
+          link.setAttribute linkSmallAttrName, ''
 
         if fontSize >= 20
-          link.setAttribute linkLargeDataAttributeName, ''
+          link.setAttribute linkLargeAttrName, ''
 
-        id = container.getAttribute linkContainerIdDataAttributeName
+        id = container.getAttribute linkContainerIdAttrName
 
         if id
           linkContainers[id].links.push link
         else
           id = uniqueLinkContainerID()
-          container.setAttribute linkContainerIdDataAttributeName, id
+          container.setAttribute linkContainerIdAttrName, id
           linkContainers[id] =
             container: container
             links: [link]
@@ -97,9 +104,9 @@ init = (options) ->
     backgroundColor = getBackgroundColor container.container
 
     for color of linkColors
-      linkSelector = """[#{ linkContainerIdDataAttributeName }="#{ id }"] a[#{ linkColorDataAttributeName }="#{ color }"]"""
-      linkSmallSelector = """#{ linkSelector }[#{ linkSmallDataAttributeName }]"""
-      linkLargeSelector = """#{ linkSelector }[#{ linkLargeDataAttributeName }]"""
+      linkSelector = """[#{ linkContainerIdAttrName }="#{ id }"] a[#{ linkColorAttrName }="#{ color }"]"""
+      linkSmallSelector = """#{ linkSelector }[#{ linkSmallAttrName }]"""
+      linkLargeSelector = """#{ linkSelector }[#{ linkLargeAttrName }]"""
 
       styles += """
         #{ linkSelector }, #{ linkSelector }:visited {
@@ -138,15 +145,34 @@ init = (options) ->
         }
       """
 
-  styleEl.innerHTML = styles
-  document.body.appendChild styleEl
+  styleNode.innerHTML = styles
+  document.body.appendChild styleNode
+
+  performanceTimes.push time() - startTime
+
+destroy = ->
+  styleNode.parentNode?.removeChild styleNode
+
+  for attribute in [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkContainerIdAttrName]
+    Array::forEach.call document.querySelectorAll("[#{ attribute }]"), (node) ->
+      node.removeAttribute attribute
 
 window.SmartUnderline =
   init: (options = {}) ->
     if document.readyState is 'loading'
-      window.addEventListener 'DOMContentLoaded', init.bind(null, options)
+      window.addEventListener 'DOMContentLoaded', ->
+        init options
+
+      window.addEventListener 'load', ->
+        destroy()
+        init options
+
     else
+      destroy()
       init options
 
   destroy: ->
-    styleEl.parentNode?.removeChild styleEl
+    destroy()
+
+  performanceTimes: ->
+    performanceTimes

@@ -1,5 +1,5 @@
 (function() {
-  var getBackgroundColor, getBackgroundColorNode, getLinkColor, init, isTransparent, linkColorDataAttributeName, linkContainerIdDataAttributeName, linkLargeDataAttributeName, linkSmallDataAttributeName, selectionColor, styleEl, uniqueLinkContainerID;
+  var destroy, getBackgroundColor, getBackgroundColorNode, getLinkColor, init, isTransparent, linkColorAttrName, linkContainerIdAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, selectionColor, styleNode, time, uniqueLinkContainerID;
 
   window.SmartUnderline = {
     init: function() {},
@@ -12,13 +12,19 @@
 
   selectionColor = '#b4d5fe';
 
-  linkColorDataAttributeName = 'data-smart-underline-link-color';
+  linkColorAttrName = 'data-smart-underline-link-color';
 
-  linkSmallDataAttributeName = 'data-smart-underline-link-small';
+  linkSmallAttrName = 'data-smart-underline-link-small';
 
-  linkLargeDataAttributeName = 'data-smart-underline-link-large';
+  linkLargeAttrName = 'data-smart-underline-link-large';
 
-  linkContainerIdDataAttributeName = 'data-smart-underline-container-id';
+  linkContainerIdAttrName = 'data-smart-underline-container-id';
+
+  performanceTimes = [];
+
+  time = function() {
+    return +(new Date);
+  };
 
   uniqueLinkContainerID = (function() {
     var id;
@@ -77,10 +83,11 @@
     return getComputedStyle(node).color;
   };
 
-  styleEl = document.createElement('style');
+  styleNode = document.createElement('style');
 
   init = function(options) {
-    var backgroundColor, color, container, fontSize, id, link, linkColors, linkContainers, linkLargeSelector, linkSelector, linkSmallSelector, links, style, styles, _i, _j, _len, _len1, _ref;
+    var backgroundColor, color, container, fontSize, id, link, linkColors, linkContainers, linkLargeSelector, linkSelector, linkSmallSelector, links, startTime, style, styles, _i, _j, _len, _len1, _ref;
+    startTime = time();
     links = document.querySelectorAll("" + (options.location ? options.location + ' ' : '') + "a");
     if (!links.length) {
       return;
@@ -93,19 +100,19 @@
       if (style.textDecoration === 'underline' && style.display === 'inline' && fontSize >= 8) {
         container = getBackgroundColorNode(link);
         if (container) {
-          link.setAttribute(linkColorDataAttributeName, getLinkColor(link));
+          link.setAttribute(linkColorAttrName, getLinkColor(link));
           if (fontSize <= 14) {
-            link.setAttribute(linkSmallDataAttributeName, '');
+            link.setAttribute(linkSmallAttrName, '');
           }
           if (fontSize >= 20) {
-            link.setAttribute(linkLargeDataAttributeName, '');
+            link.setAttribute(linkLargeAttrName, '');
           }
-          id = container.getAttribute(linkContainerIdDataAttributeName);
+          id = container.getAttribute(linkContainerIdAttrName);
           if (id) {
             linkContainers[id].links.push(link);
           } else {
             id = uniqueLinkContainerID();
-            container.setAttribute(linkContainerIdDataAttributeName, id);
+            container.setAttribute(linkContainerIdAttrName, id);
             linkContainers[id] = {
               container: container,
               links: [link]
@@ -125,14 +132,31 @@
       }
       backgroundColor = getBackgroundColor(container.container);
       for (color in linkColors) {
-        linkSelector = "[" + linkContainerIdDataAttributeName + "=\"" + id + "\"] a[" + linkColorDataAttributeName + "=\"" + color + "\"]";
-        linkSmallSelector = "" + linkSelector + "[" + linkSmallDataAttributeName + "]";
-        linkLargeSelector = "" + linkSelector + "[" + linkLargeDataAttributeName + "]";
+        linkSelector = "[" + linkContainerIdAttrName + "=\"" + id + "\"] a[" + linkColorAttrName + "=\"" + color + "\"]";
+        linkSmallSelector = "" + linkSelector + "[" + linkSmallAttrName + "]";
+        linkLargeSelector = "" + linkSelector + "[" + linkLargeAttrName + "]";
         styles += "" + linkSelector + ", " + linkSelector + ":visited {\n  color: " + color + ";\n  text-decoration: none !important;\n  text-shadow: 0.03em 0 " + backgroundColor + ", -0.03em 0 " + backgroundColor + ", 0 0.03em " + backgroundColor + ", 0 -0.03em " + backgroundColor + ", 0.06em 0 " + backgroundColor + ", -0.06em 0 " + backgroundColor + ", 0.09em 0 " + backgroundColor + ", -0.09em 0 " + backgroundColor + ", 0.12em 0 " + backgroundColor + ", -0.12em 0 " + backgroundColor + ", 0.15em 0 " + backgroundColor + ", -0.15em 0 " + backgroundColor + ";\n  background-color: transparent;\n  background-image: -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + color + ", " + color + ");\n  background-image: -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + color + ", " + color + ");\n  background-image: -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + color + ", " + color + ");\n  background-image: -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + color + ", " + color + ");\n  background-image: linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + color + ", " + color + ");\n  -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-repeat: no-repeat, no-repeat, repeat-x;\n  background-position: 0% 90%, 100% 90%, 0% 90%;\n}\n\n" + linkSmallSelector + " {\n  background-position: 0% 96%, 100% 96%, 0% 96%;\n}\n\n" + linkLargeSelector + " {\n  background-position: 0% 87%, 100% 87%, 0% 87%;\n}\n\n" + linkSelector + "::selection {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}\n\n" + linkSelector + "::-moz-selection {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}";
       }
     }
-    styleEl.innerHTML = styles;
-    return document.body.appendChild(styleEl);
+    styleNode.innerHTML = styles;
+    document.body.appendChild(styleNode);
+    return performanceTimes.push(time() - startTime);
+  };
+
+  destroy = function() {
+    var attribute, _i, _len, _ref, _ref1, _results;
+    if ((_ref = styleNode.parentNode) != null) {
+      _ref.removeChild(styleNode);
+    }
+    _ref1 = [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkContainerIdAttrName];
+    _results = [];
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      attribute = _ref1[_i];
+      _results.push(Array.prototype.forEach.call(document.querySelectorAll("[" + attribute + "]"), function(node) {
+        return node.removeAttribute(attribute);
+      }));
+    }
+    return _results;
   };
 
   window.SmartUnderline = {
@@ -141,14 +165,23 @@
         options = {};
       }
       if (document.readyState === 'loading') {
-        return window.addEventListener('DOMContentLoaded', init.bind(null, options));
+        window.addEventListener('DOMContentLoaded', function() {
+          return init(options);
+        });
+        return window.addEventListener('load', function() {
+          destroy();
+          return init(options);
+        });
       } else {
+        destroy();
         return init(options);
       }
     },
     destroy: function() {
-      var _ref;
-      return (_ref = styleEl.parentNode) != null ? _ref.removeChild(styleEl) : void 0;
+      return destroy();
+    },
+    performanceTimes: function() {
+      return performanceTimes;
     }
   };
 
