@@ -158,24 +158,24 @@ section > *:last-child {
 }
 section.about {
   background: #ddedff;
-  color: #303786;
+  color: #242965;
 }
 section.about a {
-  color: #262c6b;
+  color: #181b43;
 }
 section.before-and-after {
   background: #bbf0c7;
-  color: #278541;
+  color: #1d6431;
 }
 section.before-and-after a {
-  color: #1f6a34;
+  color: #144321;
 }
 section.limitations {
   background: #fff5d6;
-  color: #713b1b;
+  color: #552c14;
 }
 section.limitations a {
-  color: #5a2f16;
+  color: #391d0d;
 }
 footer {
   text-align: center;
