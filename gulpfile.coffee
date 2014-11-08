@@ -50,9 +50,13 @@ gulp.task 'watch', ->
   gulp.watch ['./styl/**'], ['css']
   gulp.watch ['./jade/**'], ['html']
 
-gulp.task 'default', [
+gulp.task 'build', [
   'js'
   'css'
   'html'
+]
+
+gulp.task 'default', [
+  'build'
   'watch'
 ]
