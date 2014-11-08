@@ -1,7 +1,8 @@
 default:
-  root: 'build/'
+  root: ''
   dest: 'showcase/SmartUnderline/'
   index: 'index.html'
+  files: ''
 
 production:
   bucket: 'eager.io'

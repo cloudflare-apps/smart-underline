@@ -32,18 +32,18 @@ STYLUS_OPTS =
 gulp.task 'js', ->
   gulp.src(['./coffee/**/*.coffee'])
     .pipe(gulpif(/[.]coffee$/, coffee().on('error', handleError)))
-    .pipe(gulp.dest('./build/js'))
+    .pipe(gulp.dest('./js'))
 
 gulp.task 'css', ->
   gulp.src('./styl/**/*.styl')
     .pipe(stylus(STYLUS_OPTS))
       .on('error', handleError)
-    .pipe(gulp.dest('./build/css'))
+    .pipe(gulp.dest('./css'))
 
 gulp.task 'html', ->
   gulp.src('./jade/**/*.jade')
     .pipe(jade().on('error', handleError))
-    .pipe(gulp.dest('./build'))
+    .pipe(gulp.dest('./'))
 
 gulp.task 'watch', ->
   gulp.watch ['./coffee/**'], ['js']
