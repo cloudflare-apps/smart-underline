@@ -91,12 +91,12 @@ body {
   transition: margin 0.4s, background 0.4s;
 }
 #toggle:checked + label {
-  background-color: #8ce196;
+  background-color: #87e49c;
 }
 #toggle:checked + label:after {
   content: "3d";
   margin-left: 3em;
-  background-color: #8ce196;
+  background-color: #87e49c;
 }
 .diagram {
   margin: 100px;
@@ -210,15 +210,15 @@ body {
   transform: translateY(3em) rotateX(46deg) rotateY(20deg) rotateZ(-20deg) translateZ(0);
 }
 #toggle:checked ~ .diagram .layer.background-color {
-  background: #8ce196;
+  background: #87e49c;
 }
 #toggle:checked ~ .diagram .layer.background-image span {
   color: transparent;
-  background-image: -webkit-linear-gradient(#8ce196, #8ce196), -webkit-linear-gradient(#8ce196, #8ce196), -webkit-linear-gradient(#000, #000);
-  background-image: -moz-linear-gradient(#8ce196, #8ce196), -moz-linear-gradient(#8ce196, #8ce196), -moz-linear-gradient(#000, #000);
-  background-image: -o-linear-gradient(#8ce196, #8ce196), -o-linear-gradient(#8ce196, #8ce196), -o-linear-gradient(#000, #000);
-  background-image: -ms-linear-gradient(#8ce196, #8ce196), -ms-linear-gradient(#8ce196, #8ce196), -ms-linear-gradient(#000, #000);
-  background-image: linear-gradient(#8ce196, #8ce196), linear-gradient(#8ce196, #8ce196), linear-gradient(#000, #000);
+  background-image: -webkit-linear-gradient(#87e49c, #87e49c), -webkit-linear-gradient(#87e49c, #87e49c), -webkit-linear-gradient(#000, #000);
+  background-image: -moz-linear-gradient(#87e49c, #87e49c), -moz-linear-gradient(#87e49c, #87e49c), -moz-linear-gradient(#000, #000);
+  background-image: -o-linear-gradient(#87e49c, #87e49c), -o-linear-gradient(#87e49c, #87e49c), -o-linear-gradient(#000, #000);
+  background-image: -ms-linear-gradient(#87e49c, #87e49c), -ms-linear-gradient(#87e49c, #87e49c), -ms-linear-gradient(#000, #000);
+  background-image: linear-gradient(#87e49c, #87e49c), linear-gradient(#87e49c, #87e49c), linear-gradient(#000, #000);
   -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
   -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
   background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
@@ -226,5 +226,5 @@ body {
   background-position: 0% 90%, 100% 90%, 0% 90%;
 }
 #toggle:checked ~ .diagram .layer.text-shadow {
-  text-shadow: 0.03em 0 #8ce196, -0.03em 0 #8ce196, 0 0.03em #8ce196, 0 -0.03em #8ce196, 0.06em 0 #8ce196, -0.06em 0 #8ce196, 0.09em 0 #8ce196, -0.09em 0 #8ce196, 0.12em 0 #8ce196, -0.12em 0 #8ce196, 0.15em 0 #8ce196, -0.15em 0 #8ce196;
+  text-shadow: 0.03em 0 #87e49c, -0.03em 0 #87e49c, 0 0.03em #87e49c, 0 -0.03em #87e49c, 0.06em 0 #87e49c, -0.06em 0 #87e49c, 0.09em 0 #87e49c, -0.09em 0 #87e49c, 0.12em 0 #87e49c, -0.12em 0 #87e49c, 0.15em 0 #87e49c, -0.15em 0 #87e49c;
 }

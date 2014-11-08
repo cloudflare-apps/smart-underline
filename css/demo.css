@@ -163,6 +163,17 @@ section.about {
 section.about a {
   color: #181b43;
 }
+section.diagram {
+  background: transparent;
+  color: #444;
+  -webkit-box-shadow: inset 0 0 0 2px #e0e0e0;
+  box-shadow: inset 0 0 0 2px #e0e0e0;
+}
+section.diagram iframe {
+  border: 0;
+  height: 24em;
+  width: 100%;
+}
 section.before-and-after {
   background: #bbf0c7;
   color: #1d6431;
