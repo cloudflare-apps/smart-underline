@@ -1,0 +1,166 @@
+@import nib
+
+diagramBackgroundColor = #e0e0e0
+diagramColor = #000
+greenBackgroundColor = darken(#bbf0c7, 15%)
+
+html, body
+  margin 0
+  padding 0
+  height 100%
+  width 100%
+  overflow hidden
+  user-select none
+  background #fff
+
+#toggle
+  appearance none
+  position absolute
+  left -999em
+
+  + label
+    display block
+    cursor pointer
+    position fixed
+    top 0
+    left 0
+    right 32em
+    bottom 0
+    margin auto
+    z-index 1
+    padding .125em
+    width 6.5em
+    height 3em
+    background-color diagramBackgroundColor
+    border-radius 3em
+    transition background 0.4s
+
+    @media (max-width 40em)
+      margin 0
+      right auto
+      bottom 0
+
+    &:before, &:after
+      display block
+      position absolute
+      content ""
+
+    &:before
+      top .125em
+      left .125em
+      bottom .125em
+      right .125em
+      background-color #fff
+      border-radius 3em
+      transition background 0.4s
+
+    &:after
+      content "2d"
+      text-align center
+      text-transform uppercase
+      letter-spacing .05em
+      text-indent .05em
+      font-family Futura, "Helvetica Neue", sans-serif
+      font-weight 100
+      color rgba(#000, .25)
+      line-height 2.75em
+      top .25em
+      left .25em
+      bottom .25em
+      width 3.25em
+      background-color diagramBackgroundColor
+      border-radius 3.25em
+      transition margin 0.4s, background 0.4s
+
+  &:checked + label
+    background-color greenBackgroundColor
+
+    &:after
+      content "3d"
+      margin-left 3em
+      background-color greenBackgroundColor
+
+.diagram
+  margin 100px
+  font-size 2em
+  font-family Futura, "Helvetica Neue", sans-serif
+  position fixed
+  top 0
+  right 0
+  bottom 0
+  left 0
+  margin auto
+  pointer-events none
+
+  @media (max-width 40em)
+    font-size 1.5em
+
+  .block
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    left 0
+    margin auto
+    white-space nowrap
+    width 11.2125em
+    height 2.3em
+
+  .layer
+    position absolute
+    padding .5em 1em
+    transition all 1s
+    transform translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateZ(0)
+    transform-origin 0% 0%
+    box-shadow inset 0 0 0 .125rem rgba(#000, 0)
+    border-radius .25em
+
+    &.background-color
+      background diagramBackgroundColor
+      color transparent
+
+    &.background-image span
+      color transparent
+      background-image linear-gradient(diagramBackgroundColor, diagramBackgroundColor), linear-gradient(diagramBackgroundColor, diagramBackgroundColor), linear-gradient(diagramColor, diagramColor)
+      background-size 0.05em 1px, 0.05em 1px, 1px 1px
+      background-repeat no-repeat, no-repeat, repeat-x
+      background-position 0% 90%, 100% 90%, 0% 90%
+
+    &.text-shadow
+      text-shadow 0.03em 0 diagramBackgroundColor, -0.03em 0 diagramBackgroundColor, 0 0.03em diagramBackgroundColor, 0 -0.03em diagramBackgroundColor, 0.06em 0 diagramBackgroundColor, -0.06em 0 diagramBackgroundColor, 0.09em 0 diagramBackgroundColor, -0.09em 0 diagramBackgroundColor, 0.12em 0 diagramBackgroundColor, -0.12em 0 diagramBackgroundColor, 0.15em 0 diagramBackgroundColor, -0.15em 0 diagramBackgroundColor
+      color transparent
+
+    &.text
+      color diagramColor
+
+#toggle:checked ~ .diagram
+
+  .layer
+    opacity 1
+    pointer-events none
+    box-shadow inset 0 0 0 .125rem rgba(#000, .1)
+
+    &:nth-child(4)
+      transform translateY(-3em) rotateX(46deg) rotateY(20deg) rotateZ(-20deg) translateZ(0)
+
+    &:nth-child(3)
+      transform translateY(-1em) rotateX(46deg) rotateY(20deg) rotateZ(-20deg) translateZ(0)
+
+    &:nth-child(2)
+      transform translateY( 1em) rotateX(46deg) rotateY(20deg) rotateZ(-20deg) translateZ(0)
+
+    &:nth-child(1)
+      transform translateY( 3em) rotateX(46deg) rotateY(20deg) rotateZ(-20deg) translateZ(0)
+
+    &.background-color
+      background greenBackgroundColor
+
+    &.background-image span
+      color transparent
+      background-image linear-gradient(greenBackgroundColor, greenBackgroundColor), linear-gradient(greenBackgroundColor, greenBackgroundColor), linear-gradient(diagramColor, diagramColor)
+      background-size 0.05em 1px, 0.05em 1px, 1px 1px
+      background-repeat no-repeat, no-repeat, repeat-x
+      background-position 0% 90%, 100% 90%, 0% 90%
+
+    &.text-shadow
+      text-shadow 0.03em 0 greenBackgroundColor, -0.03em 0 greenBackgroundColor, 0 0.03em greenBackgroundColor, 0 -0.03em greenBackgroundColor, 0.06em 0 greenBackgroundColor, -0.06em 0 greenBackgroundColor, 0.09em 0 greenBackgroundColor, -0.09em 0 greenBackgroundColor, 0.12em 0 greenBackgroundColor, -0.12em 0 greenBackgroundColor, 0.15em 0 greenBackgroundColor, -0.15em 0 greenBackgroundColor
