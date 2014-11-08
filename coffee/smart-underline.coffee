@@ -123,7 +123,7 @@ init = (options) ->
           -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
           background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
           background-repeat: no-repeat, no-repeat, repeat-x;
-          background-position: 0% 90%, 100% 90%, 0% 90%;
+          background-position: 0% 89%, 100% 89%, 0% 89%;
         }
 
         #{ linkSmallSelector } {
@@ -131,7 +131,7 @@ init = (options) ->
         }
 
         #{ linkLargeSelector } {
-          background-position: 0% 87%, 100% 87%, 0% 87%;
+          background-position: 0% 86%, 100% 86%, 0% 86%;
         }
 
         #{ linkSelector }::selection {

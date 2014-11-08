@@ -1,8 +1,9 @@
 @import nib
 
-diagramBackgroundColor = #e0e0e0
-diagramColor = #000
-greenBackgroundColor = darken(#bbf0c7, 15%)
+@import "ui/styl/colors"
+@import "ui/styl/fonts"
+
+threeDeeOnBackgroundColor = darken(successBackgroundColor, 15%)
 
 html, body
   margin 0
@@ -31,7 +32,7 @@ html, body
     padding .125em
     width 6.5em
     height 3em
-    background-color diagramBackgroundColor
+    background-color gray
     border-radius 3em
     transition background 0.4s
 
@@ -68,17 +69,17 @@ html, body
       left .25em
       bottom .25em
       width 3.25em
-      background-color diagramBackgroundColor
+      background-color gray
       border-radius 3.25em
       transition margin 0.4s, background 0.4s
 
   &:checked + label
-    background-color greenBackgroundColor
+    background-color threeDeeOnBackgroundColor
 
     &:after
       content "3d"
       margin-left 3em
-      background-color greenBackgroundColor
+      background-color threeDeeOnBackgroundColor
 
 .diagram
   margin 100px
@@ -116,22 +117,22 @@ html, body
     border-radius .25em
 
     &.background-color
-      background diagramBackgroundColor
+      background gray
       color transparent
 
     &.background-image span
       color transparent
-      background-image linear-gradient(diagramBackgroundColor, diagramBackgroundColor), linear-gradient(diagramBackgroundColor, diagramBackgroundColor), linear-gradient(diagramColor, diagramColor)
+      background-image linear-gradient(gray, gray), linear-gradient(gray, gray), linear-gradient(#000, #000)
       background-size 0.05em 1px, 0.05em 1px, 1px 1px
       background-repeat no-repeat, no-repeat, repeat-x
       background-position 0% 90%, 100% 90%, 0% 90%
 
     &.text-shadow
-      text-shadow 0.03em 0 diagramBackgroundColor, -0.03em 0 diagramBackgroundColor, 0 0.03em diagramBackgroundColor, 0 -0.03em diagramBackgroundColor, 0.06em 0 diagramBackgroundColor, -0.06em 0 diagramBackgroundColor, 0.09em 0 diagramBackgroundColor, -0.09em 0 diagramBackgroundColor, 0.12em 0 diagramBackgroundColor, -0.12em 0 diagramBackgroundColor, 0.15em 0 diagramBackgroundColor, -0.15em 0 diagramBackgroundColor
+      text-shadow 0.03em 0 gray, -0.03em 0 gray, 0 0.03em gray, 0 -0.03em gray, 0.06em 0 gray, -0.06em 0 gray, 0.09em 0 gray, -0.09em 0 gray, 0.12em 0 gray, -0.12em 0 gray, 0.15em 0 gray, -0.15em 0 gray
       color transparent
 
     &.text
-      color diagramColor
+      color #000
 
 #toggle:checked ~ .diagram
 
@@ -153,14 +154,14 @@ html, body
       transform translateY( 3em) rotateX(46deg) rotateY(20deg) rotateZ(-20deg) translateZ(0)
 
     &.background-color
-      background greenBackgroundColor
+      background threeDeeOnBackgroundColor
 
     &.background-image span
       color transparent
-      background-image linear-gradient(greenBackgroundColor, greenBackgroundColor), linear-gradient(greenBackgroundColor, greenBackgroundColor), linear-gradient(diagramColor, diagramColor)
+      background-image linear-gradient(threeDeeOnBackgroundColor, threeDeeOnBackgroundColor), linear-gradient(threeDeeOnBackgroundColor, threeDeeOnBackgroundColor), linear-gradient(#000, #000)
       background-size 0.05em 1px, 0.05em 1px, 1px 1px
       background-repeat no-repeat, no-repeat, repeat-x
       background-position 0% 90%, 100% 90%, 0% 90%
 
     &.text-shadow
-      text-shadow 0.03em 0 greenBackgroundColor, -0.03em 0 greenBackgroundColor, 0 0.03em greenBackgroundColor, 0 -0.03em greenBackgroundColor, 0.06em 0 greenBackgroundColor, -0.06em 0 greenBackgroundColor, 0.09em 0 greenBackgroundColor, -0.09em 0 greenBackgroundColor, 0.12em 0 greenBackgroundColor, -0.12em 0 greenBackgroundColor, 0.15em 0 greenBackgroundColor, -0.15em 0 greenBackgroundColor
+      text-shadow 0.03em 0 threeDeeOnBackgroundColor, -0.03em 0 threeDeeOnBackgroundColor, 0 0.03em threeDeeOnBackgroundColor, 0 -0.03em threeDeeOnBackgroundColor, 0.06em 0 threeDeeOnBackgroundColor, -0.06em 0 threeDeeOnBackgroundColor, 0.09em 0 threeDeeOnBackgroundColor, -0.09em 0 threeDeeOnBackgroundColor, 0.12em 0 threeDeeOnBackgroundColor, -0.12em 0 threeDeeOnBackgroundColor, 0.15em 0 threeDeeOnBackgroundColor, -0.15em 0 threeDeeOnBackgroundColor

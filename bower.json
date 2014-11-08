@@ -1,9 +1,12 @@
 {
   "name": "SmartUnderline",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "ignore": [
     "jade/",
     "index.html",
     "node_modules/"
-  ]
+  ],
+  "devDependencies": {
+    "ui": "git@github.com:EagerIO/ui.git#763aa36f4fbc04a75543bfcf62acabf84583e837"
+  }
 }

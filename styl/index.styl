@@ -1,8 +1,11 @@
 @import nib
 
-@import url("//fonts.googleapis.com/css?family=Merriweather:400")
+@import "ui/styl/colors"
+@import "ui/styl/fonts"
+@import "ui/styl/font-smoothing"
 
 html
+  antialiasedFonts()
   font-size 16px
 
   @media (min-width 1681px)
@@ -12,29 +15,27 @@ a:focus
   outline thin dotted
 
 body
-  -webkit-font-smoothing antialiased
-  font-family "Merriweather", serif
   color #000
   width 36em
   max-width 100%
-  padding 1em
+  padding 3em 1em
   box-sizing border-box
   margin-left auto
   margin-right auto
+  font-family serifFonts
+
+  @media (max-width 768px)
+    padding 1em 1em
 
 header
   text-align center
 
 h1
-  padding-top 2em
   font-size 1.875em
-  font-family Futura, sans-serif
+  font-size 2.25em
   font-weight normal
-  letter-spacing .04em
-  text-indent .04em
-
-  @media (max-width 768px)
-    padding-top 0
+  letter-spacing .01em
+  text-indent .01em
 
   a
 
@@ -56,7 +57,6 @@ h1
     margin-right auto
     border 0
     height 2.3rem
-    -webkit-filter hue-rotate(130deg)
 
     &:hover
       opacity 1
@@ -74,14 +74,14 @@ h2 a
     color inherit
 
 h1 + h2
-  font-size 1em
+  font-size 1.1875em
   font-weight normal
   margin-top 0
 
 h3
   text-align center
   font-size 1em
-  font-family Futura, sans-serif
+  font-family "Futura", sans-serif
   font-weight bold
   text-transform uppercase
   letter-spacing .25em
@@ -98,7 +98,8 @@ p
   margin 1em 0
 
 p, ul
-  line-height 1.8em
+  line-height 1.5em
+  font-size 1.1875em
 
 p.example-header
   text-indent 0
@@ -107,7 +108,7 @@ p.example-header
 
 p.example
   text-indent 0
-  font-size 1.5em
+  font-size 1.75em
   text-align center
   margin .666em 0
 
@@ -148,16 +149,16 @@ section
     margin-bottom 0
 
   &.about
-    background #ddedff
-    color darken(#303786, 25%)
+    background infoBackgroundColor
+    color darken(infoColor, 25%)
 
     a
-      color darken(#303786, 50%)
+      color darken(infoColor, 50%)
 
   &.diagram
     background transparent
     color #444
-    box-shadow inset 0 0 0 2px #e0e0e0
+    box-shadow inset 0 0 0 2px gray
 
     iframe
       border 0
@@ -165,18 +166,18 @@ section
       width 100%
 
   &.before-and-after
-    background #bbf0c7
-    color darken(#278541, 25%)
+    background successBackgroundColor
+    color darken(successColor, 25%)
 
     a
-      color darken(#278541, 50%)
+      color darken(successColor, 50%)
 
   &.limitations
-    background #fff5d6
-    color darken(#713b1b, 25%)
+    background warnBackgroundColor
+    color darken(warnColor, 25%)
 
     a
-      color darken(#713b1b, 50%)
+      color darken(warnColor, 50%)
 
 footer
   text-align center
@@ -185,4 +186,4 @@ footer
     text-indent 0
 
   a.eager
-    color #e90f92
+    color brandPink
