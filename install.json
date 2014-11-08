@@ -1,0 +1,25 @@
+{
+  "resources": {
+    "head": [
+      {
+        "type": "script",
+        "src": "./js/smart-underline.js"
+      },
+      {
+        "type": "script",
+        "contents": "SmartUnderline.init(INSTALL_OPTIONS)"
+      }
+    ]
+  },
+  "options": {
+    "properties": {
+      "location": {
+        "title": "Location",
+        "description": "You may optionally specify a part of the page to apply SmartUnderline. Leave this blank to apply SmartUnderline to the entire page.",
+        "type": "string",
+        "format": "selector",
+        "default": ""
+      }
+    }
+  }
+}
