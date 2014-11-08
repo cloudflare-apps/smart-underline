@@ -10,6 +10,10 @@ html
     input(id="toggle" type="checkbox")
     label(for="toggle")
 
+    script.
+      if (location.search === '?three-dee' || location.search === '?on')
+        toggle.setAttribute('checked', true)
+
     .diagram
       .block
         .layer.background-color
