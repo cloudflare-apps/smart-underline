@@ -28,25 +28,35 @@ html
     section.about
       h3 About
 
-      p
+      p.indented
         | SmartUnderline is an open-source JavaScript library which uses clever
         | tricks to draw underlines in a more beautiful and readable way.
         | It can be downloaded on <a href="https://github.com/EagerIO/SmartUnderline">GitHub</a>
         | or installed for free on the <a href="https://eager.io/app/eA9ULux0UOJP/install?utm_source=lp">Eager App Store</a>.
 
-      p
+      p.indented
         | SmartUnderline works by searching your page for links which have a CSS underline
         | applied with text-decoration, and replaces the text-decoration with a smarter line
         | drawn in such a way that it gets cleared by the descenders—glyphs such as “g”,
         | “j”, and others—creating more readable and beautiful links.
 
-      // <a href="https://eager.io/app/eA9ULux0UOJP/install?utm_source=lp" target="_blank" data-eager-button>
-      //  <img src="https://install.eager.io/button.png" alt="Install with Eager" height="48" width="180" style="display: block; margin: 0 auto;">
-      //  <script src="https://install.eager.io/embed.js"></script>
-      // </a>
+    section.install
+      p
+        | Install SmartUnderline on your website for free, with Eager.
+
+      //- p
+      //-   a(href="https://eager.io/app/eA9ULux0UOJP/install?utm_source=lp" target="_blank" data-eager-button)
+      //-     img(src="https://install.eager.io/button.png" alt="Install with Eager" height="48" width="180" style="display: block; margin: 0 auto")
+      //-     script(src="https://install.eager.io/embed.js")
+
+      p.
+        <a href="https://eager.io/app/eA9ULux0UOJP/install?utm_source=lp" target="_blank" data-eager-button>
+          <img src="https://install.eager.io/button.png" alt="Install with Eager" height="48" width="180" style="display: block; margin: 0 auto">
+          <script src="https://install.eager.io/embed.js"></script>
+        </a>
 
     section.diagram
-      iframe(src="./diagram")
+      iframe(src="./diagram#three-dee")
 
     section.before-and-after
       h3 Examples
@@ -61,30 +71,30 @@ html
           text-shadow: none !important;
         }
 
-      p.example
-        span
+      p.example.before-and-after
+        span.before
           a.no-smart-underline(href)
             | Intriguing, eh?
 
-        span
+        span.after
           a(href)
             | Intriguing, eh?
 
-      p.example.rtl
-        span
-          a.no-smart-underline(href)
-            | متشرف بمعرفتك
-
-        span
+      p.example.before-and-after.rtl
+        span.before
           a(href)
             | متشرف بمعرفتك
 
-      p.example
-        span
+        span.after
+          a.no-smart-underline(href)
+            | متشرف بمعرفتك
+
+      p.example.before-and-after
+        span.before
           a.no-smart-underline(href)
             | Illegal styles
 
-        span
+        span.after
           a(href)
             | Illegal styles
 
@@ -92,14 +102,13 @@ html
         | And one more for some fun. :)
 
       p.example
-        span
-          a(href)
-            | 50 ways of joyfully piquing intrigue
+        a(href)
+          | 50 ways of joyfully piquing intrigue
 
     section.limitations
       h3 Notes
 
-      p
+      p.indented
         | While SmartUnderline works great on blogs and in other controlled-text enironments,
         | there are a few things you should be aware of when considering using SmartUnderline
         | on your website.
