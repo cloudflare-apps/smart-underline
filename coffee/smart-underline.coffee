@@ -9,7 +9,7 @@ selectionColor = '#b4d5fe'
 linkColorAttrName = 'data-smart-underline-link-color'
 linkSmallAttrName = 'data-smart-underline-link-small'
 linkLargeAttrName = 'data-smart-underline-link-large'
-linkContainerIdAttrName = 'data-smart-underline-container-id'
+containerIdAttrName = 'data-smart-underline-container-id'
 
 performanceTimes = []
 time = -> + new Date
@@ -87,13 +87,40 @@ getLinkColor = (node) ->
 
 styleNode = document.createElement 'style'
 
+countParentContainers = (node, count = 0) ->
+  parentNode = node.parentNode
+  reachedRootNode = not parentNode or parentNode is document or parentNode is node
+
+  if reachedRootNode
+    return count
+
+  else
+    if parentNode.hasAttribute containerIdAttrName
+      count += 1
+
+    return count + countParentContainers(parentNode)
+
+sortContainersForCSSPrecendence = (containers) ->
+  sorted = []
+
+  for id, container of containers
+    container.depth = countParentContainers container.container
+    sorted.push container
+
+  sorted.sort (a, b) ->
+    return -1 if a.depth < b.depth
+    return 1 if a.depth > b.depth
+    return 0
+
+  return sorted
+
 init = (options) ->
   startTime = time()
 
   links = document.querySelectorAll "#{ if options.location then options.location + ' ' else '' }a"
   return unless links.length
 
-  linkContainers = {}
+  containers = {}
   for link in links
     style = getComputedStyle link
     fontSize = parseFloat style.fontSize
@@ -109,27 +136,30 @@ init = (options) ->
         if fontSize >= 20
           link.setAttribute linkLargeAttrName, ''
 
-        id = container.getAttribute linkContainerIdAttrName
+        id = container.getAttribute containerIdAttrName
 
         if id
-          linkContainers[id].links.push link
+          containers[id].links.push link
         else
           id = uniqueLinkContainerID()
-          container.setAttribute linkContainerIdAttrName, id
-          linkContainers[id] =
+          container.setAttribute containerIdAttrName, id
+          containers[id] =
+            id: id
             container: container
             links: [link]
 
   styles = ''
 
-  for id, container of linkContainers
+  containersWithPrecedence = sortContainersForCSSPrecendence containers
+
+  for container in containersWithPrecedence
     linkColors = {}
     linkColors[getLinkColor link] = true for link in container.links
 
     backgroundColor = getBackgroundColor container.container
 
     for color of linkColors
-      linkSelector = """[#{ linkContainerIdAttrName }="#{ id }"] a[#{ linkColorAttrName }="#{ color }"]"""
+      linkSelector = """[#{ containerIdAttrName }="#{ container.id }"] a[#{ linkColorAttrName }="#{ color }"]"""
       linkSmallSelector = """#{ linkSelector }[#{ linkSmallAttrName }]"""
       linkLargeSelector = """#{ linkSelector }[#{ linkLargeAttrName }]"""
 
@@ -178,7 +208,7 @@ init = (options) ->
 destroy = ->
   styleNode.parentNode?.removeChild styleNode
 
-  for attribute in [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkContainerIdAttrName]
+  for attribute in [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, containerIdAttrName]
     Array::forEach.call document.querySelectorAll("[#{ attribute }]"), (node) ->
       node.removeAttribute attribute
 
