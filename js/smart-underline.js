@@ -91,7 +91,7 @@
     _ref = node.children;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       child = _ref[_i];
-      style = getComputedStyle(link);
+      style = getComputedStyle(child);
       if (style.display !== 'inline') {
         return true;
       }

@@ -66,7 +66,7 @@ containsInvalidElements = (node) ->
 
 containsAnyNonInlineElements = (node) ->
   for child in node.children
-    style = getComputedStyle link
+    style = getComputedStyle child
 
     if style.display isnt 'inline'
       return true
