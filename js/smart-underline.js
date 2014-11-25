@@ -1,5 +1,5 @@
 (function() {
-  var destroy, getBackgroundColor, getBackgroundColorNode, getLinkColor, init, isTransparent, linkColorAttrName, linkContainerIdAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, selectionColor, styleNode, time, uniqueLinkContainerID;
+  var containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, getBackgroundColor, getBackgroundColorNode, getLinkColor, hasValidLinkContent, init, isTransparent, linkColorAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
 
   window.SmartUnderline = {
     init: function() {},
@@ -18,7 +18,7 @@
 
   linkLargeAttrName = 'data-smart-underline-link-large';
 
-  linkContainerIdAttrName = 'data-smart-underline-container-id';
+  containerIdAttrName = 'data-smart-underline-container-id';
 
   performanceTimes = [];
 
@@ -69,6 +69,37 @@
     }
   };
 
+  hasValidLinkContent = function(node) {
+    return containsInvalidElements(node) || containsAnyNonInlineElements(node);
+  };
+
+  containsInvalidElements = function(node) {
+    var child, _i, _len, _ref, _ref1, _ref2;
+    _ref = node.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      if ((_ref1 = (_ref2 = child.tagName) != null ? _ref2.toLowerCase() : void 0) === 'img' || _ref1 === 'video' || _ref1 === 'canvas' || _ref1 === 'embed' || _ref1 === 'object' || _ref1 === 'iframe') {
+        return true;
+      }
+      return containsImages(child);
+    }
+    return false;
+  };
+
+  containsAnyNonInlineElements = function(node) {
+    var child, style, _i, _len, _ref;
+    _ref = node.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      style = getComputedStyle(link);
+      if (style.display !== 'inline') {
+        return true;
+      }
+      return containsAnyNonInlineElements(child);
+    }
+    return false;
+  };
+
   getBackgroundColor = function(node) {
     var backgroundColor;
     backgroundColor = getComputedStyle(node).backgroundColor;
@@ -85,19 +116,56 @@
 
   styleNode = document.createElement('style');
 
+  countParentContainers = function(node, count) {
+    var parentNode, reachedRootNode;
+    if (count == null) {
+      count = 0;
+    }
+    parentNode = node.parentNode;
+    reachedRootNode = !parentNode || parentNode === document || parentNode === node;
+    if (reachedRootNode) {
+      return count;
+    } else {
+      if (parentNode.hasAttribute(containerIdAttrName)) {
+        count += 1;
+      }
+      return count + countParentContainers(parentNode);
+    }
+  };
+
+  sortContainersForCSSPrecendence = function(containers) {
+    var container, id, sorted;
+    sorted = [];
+    for (id in containers) {
+      container = containers[id];
+      container.depth = countParentContainers(container.container);
+      sorted.push(container);
+    }
+    sorted.sort(function(a, b) {
+      if (a.depth < b.depth) {
+        return -1;
+      }
+      if (a.depth > b.depth) {
+        return 1;
+      }
+      return 0;
+    });
+    return sorted;
+  };
+
   init = function(options) {
-    var backgroundColor, color, container, fontSize, id, link, linkColors, linkContainers, linkLargeSelector, linkSelector, linkSmallSelector, links, startTime, style, styles, _i, _j, _len, _len1, _ref;
+    var backgroundColor, color, container, containers, containersWithPrecedence, fontSize, id, link, linkColors, linkLargeSelector, linkSelector, linkSmallSelector, links, startTime, style, styles, _i, _j, _k, _len, _len1, _len2, _ref;
     startTime = time();
     links = document.querySelectorAll("" + (options.location ? options.location + ' ' : '') + "a");
     if (!links.length) {
       return;
     }
-    linkContainers = {};
+    containers = {};
     for (_i = 0, _len = links.length; _i < _len; _i++) {
       link = links[_i];
       style = getComputedStyle(link);
       fontSize = parseFloat(style.fontSize);
-      if (style.textDecoration === 'underline' && style.display === 'inline' && fontSize >= 8) {
+      if (style.textDecoration === 'underline' && style.display === 'inline' && fontSize >= 8 && !hasValidLinkContent(link)) {
         container = getBackgroundColorNode(link);
         if (container) {
           link.setAttribute(linkColorAttrName, getLinkColor(link));
@@ -107,13 +175,14 @@
           if (fontSize >= 20) {
             link.setAttribute(linkLargeAttrName, '');
           }
-          id = container.getAttribute(linkContainerIdAttrName);
+          id = container.getAttribute(containerIdAttrName);
           if (id) {
-            linkContainers[id].links.push(link);
+            containers[id].links.push(link);
           } else {
             id = uniqueLinkContainerID();
-            container.setAttribute(linkContainerIdAttrName, id);
-            linkContainers[id] = {
+            container.setAttribute(containerIdAttrName, id);
+            containers[id] = {
+              id: id,
               container: container,
               links: [link]
             };
@@ -122,17 +191,18 @@
       }
     }
     styles = '';
-    for (id in linkContainers) {
-      container = linkContainers[id];
+    containersWithPrecedence = sortContainersForCSSPrecendence(containers);
+    for (_j = 0, _len1 = containersWithPrecedence.length; _j < _len1; _j++) {
+      container = containersWithPrecedence[_j];
       linkColors = {};
       _ref = container.links;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        link = _ref[_j];
+      for (_k = 0, _len2 = _ref.length; _k < _len2; _k++) {
+        link = _ref[_k];
         linkColors[getLinkColor(link)] = true;
       }
       backgroundColor = getBackgroundColor(container.container);
       for (color in linkColors) {
-        linkSelector = "[" + linkContainerIdAttrName + "=\"" + id + "\"] a[" + linkColorAttrName + "=\"" + color + "\"]";
+        linkSelector = "[" + containerIdAttrName + "=\"" + container.id + "\"] a[" + linkColorAttrName + "=\"" + color + "\"]";
         linkSmallSelector = "" + linkSelector + "[" + linkSmallAttrName + "]";
         linkLargeSelector = "" + linkSelector + "[" + linkLargeAttrName + "]";
         styles += "" + linkSelector + ", " + linkSelector + ":visited {\n  color: " + color + ";\n  text-decoration: none !important;\n  text-shadow: 0.03em 0 " + backgroundColor + ", -0.03em 0 " + backgroundColor + ", 0 0.03em " + backgroundColor + ", 0 -0.03em " + backgroundColor + ", 0.06em 0 " + backgroundColor + ", -0.06em 0 " + backgroundColor + ", 0.09em 0 " + backgroundColor + ", -0.09em 0 " + backgroundColor + ", 0.12em 0 " + backgroundColor + ", -0.12em 0 " + backgroundColor + ", 0.15em 0 " + backgroundColor + ", -0.15em 0 " + backgroundColor + ";\n  background-color: transparent;\n  background-image: -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + color + ", " + color + ");\n  background-image: -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + color + ", " + color + ");\n  background-image: -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + color + ", " + color + ");\n  background-image: -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + color + ", " + color + ");\n  background-image: linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + color + ", " + color + ");\n  -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-repeat: no-repeat, no-repeat, repeat-x;\n  background-position: 0% 89%, 100% 89%, 0% 89%;\n}\n\n" + linkSmallSelector + " {\n  background-position: 0% 96%, 100% 96%, 0% 96%;\n}\n\n" + linkLargeSelector + " {\n  background-position: 0% 86%, 100% 86%, 0% 86%;\n}\n\n" + linkSelector + "::selection {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}\n\n" + linkSelector + "::-moz-selection {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}";
@@ -148,7 +218,7 @@
     if ((_ref = styleNode.parentNode) != null) {
       _ref.removeChild(styleNode);
     }
-    _ref1 = [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkContainerIdAttrName];
+    _ref1 = [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, containerIdAttrName];
     _results = [];
     for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
       attribute = _ref1[_i];
