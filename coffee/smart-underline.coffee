@@ -60,7 +60,7 @@ containsInvalidElements = (node) ->
     if child.tagName?.toLowerCase() in ['img', 'video', 'canvas', 'embed', 'object', 'iframe']
       return true
 
-    return containsImages child
+    return containsInvalidElements child
 
   return false
 
