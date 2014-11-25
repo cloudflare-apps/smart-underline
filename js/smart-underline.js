@@ -81,7 +81,7 @@
       if ((_ref1 = (_ref2 = child.tagName) != null ? _ref2.toLowerCase() : void 0) === 'img' || _ref1 === 'video' || _ref1 === 'canvas' || _ref1 === 'embed' || _ref1 === 'object' || _ref1 === 'iframe') {
         return true;
       }
-      return containsImages(child);
+      return containsInvalidElements(child);
     }
     return false;
   };
