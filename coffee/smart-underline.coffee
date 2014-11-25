@@ -50,6 +50,31 @@ getBackgroundColorNode = (node) ->
   else
     return node
 
+hasValidLinkContent = (node) ->
+  # For performance, check for invalid child elements before
+  # using getComputedStyle to check for display block elements
+  containsInvalidElements(node) or containsAnyNonInlineElements(node)
+
+containsInvalidElements = (node) ->
+  for child in node.children
+    if child.tagName?.toLowerCase() in ['img', 'video', 'canvas', 'embed', 'object', 'iframe']
+      return true
+
+    return containsImages child
+
+  return false
+
+containsAnyNonInlineElements = (node) ->
+  for child in node.children
+    style = getComputedStyle link
+
+    if style.display isnt 'inline'
+      return true
+
+    return containsAnyNonInlineElements child
+
+  return false
+
 getBackgroundColor = (node) ->
   backgroundColor = getComputedStyle(node).backgroundColor
   if node is document.documentElement and isTransparent backgroundColor
@@ -72,7 +97,7 @@ init = (options) ->
   for link in links
     style = getComputedStyle link
     fontSize = parseFloat style.fontSize
-    if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 8
+    if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 8 and not hasValidLinkContent(link)
       container = getBackgroundColorNode link
 
       if container
