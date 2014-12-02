@@ -9,4 +9,4 @@ tricks to draw underlines in a more readable and beautiful way.
   <img src="https://install.eager.io/install-button.png" border="0" width="126">
 </a>
 
-![Example](https://eager.io/showcase/SmartUnderline/images/examples.png)
+<img alt="Examples" src="https://eager.io/showcase/SmartUnderline/images/examples.png" width="544">
