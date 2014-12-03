@@ -13,8 +13,8 @@ dependencies:
     - bower install
     - gulp build
     - go get github.com/tools/godep
-    - git clone git@github.com:EagerIO/Static.git
-    - cd Static; godep go build -o ../deploy deploy/deploy.go
+    - git clone git@github.com:EagerIO/Stout.git
+    - cd Stout; godep go build -o ../stout src/*
 
 test:
   override:
@@ -24,9 +24,9 @@ deployment:
   development:
     branch: dev
     commands:
-      - ./deploy --env development --config ./deploy.yaml --key $AMAZON_KEY_DEV --secret $AMAZON_SECRET_DEV
+      - ./stout deploy --env development --key $AMAZON_KEY_DEV --secret $AMAZON_SECRET_DEV
 
   production:
     branch: master
     commands:
-      - ./deploy --env production --config ./deploy.yaml --key $AMAZON_KEY_PROD --secret $AMAZON_SECRET_PROD
+      - ./stout deploy --env production --key $AMAZON_KEY_PROD --secret $AMAZON_SECRET_PROD
