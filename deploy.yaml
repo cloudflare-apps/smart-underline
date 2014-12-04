@@ -1,8 +1,7 @@
 default:
   root: ''
   dest: 'showcase/SmartUnderline/'
-  index: 'index.html,diagram/index.html'
-  files: 'images/*'
+  files: 'images/*,index.html,diagram/index.html'
 
 production:
   bucket: 'eager.io'
