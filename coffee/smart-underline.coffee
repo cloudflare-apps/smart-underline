@@ -9,11 +9,14 @@ selectionColor = '#b4d5fe'
 linkColorAttrName = 'data-smart-underline-link-color'
 linkSmallAttrName = 'data-smart-underline-link-small'
 linkLargeAttrName = 'data-smart-underline-link-large'
+linkAlwysAttrName = 'data-smart-underline-link-always'
+linkHoverAttrName = 'data-smart-underline-link-hover'
 containerIdAttrName = 'data-smart-underline-container-id'
 
 performanceTimes = []
 time = -> + new Date
 
+linkContainers = {}
 uniqueLinkContainerID = do ->
   id = 0
   return -> id += 1
@@ -114,43 +117,42 @@ sortContainersForCSSPrecendence = (containers) ->
 
   return sorted
 
-init = (options) ->
-  startTime = time()
+initLink = (link) ->
+  style = getComputedStyle link
+  fontSize = parseFloat style.fontSize
 
-  links = document.querySelectorAll "#{ if options.location then options.location + ' ' else '' }a"
-  return unless links.length
+  if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 8 and not hasValidLinkContent(link)
+    container = getBackgroundColorNode link
 
-  containers = {}
-  for link in links
-    style = getComputedStyle link
-    fontSize = parseFloat style.fontSize
-    if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 8 and not hasValidLinkContent(link)
-      container = getBackgroundColorNode link
+    if container
+      link.setAttribute linkColorAttrName, getLinkColor(link)
 
-      if container
-        link.setAttribute linkColorAttrName, getLinkColor(link)
+      if fontSize <= 14
+        link.setAttribute linkSmallAttrName, ''
 
-        if fontSize <= 14
-          link.setAttribute linkSmallAttrName, ''
+      if fontSize >= 20
+        link.setAttribute linkLargeAttrName, ''
 
-        if fontSize >= 20
-          link.setAttribute linkLargeAttrName, ''
+      id = container.getAttribute containerIdAttrName
 
-        id = container.getAttribute containerIdAttrName
+      if id
+        linkContainers[id].links.push link
+      else
+        id = uniqueLinkContainerID()
+        container.setAttribute containerIdAttrName, id
+        linkContainers[id] =
+          id: id
+          container: container
+          links: [link]
 
-        if id
-          containers[id].links.push link
-        else
-          id = uniqueLinkContainerID()
-          container.setAttribute containerIdAttrName, id
-          containers[id] =
-            id: id
-            container: container
-            links: [link]
+      return true
 
+  return false
+
+renderStyles = ->
   styles = ''
 
-  containersWithPrecedence = sortContainersForCSSPrecendence containers
+  containersWithPrecedence = sortContainersForCSSPrecendence linkContainers
 
   for container in containersWithPrecedence
     linkColors = {}
@@ -159,12 +161,15 @@ init = (options) ->
     backgroundColor = getBackgroundColor container.container
 
     for color of linkColors
-      linkSelector = """[#{ containerIdAttrName }="#{ container.id }"] a[#{ linkColorAttrName }="#{ color }"]"""
-      linkSmallSelector = """#{ linkSelector }[#{ linkSmallAttrName }]"""
-      linkLargeSelector = """#{ linkSelector }[#{ linkLargeAttrName }]"""
+      linkSelector = (modifier = '') -> """
+        [#{ containerIdAttrName }="#{ container.id }"] a[#{ linkColorAttrName }="#{ color }"][#{ linkAlwysAttrName }]#{ modifier },
+        [#{ containerIdAttrName }="#{ container.id }"] a[#{ linkColorAttrName }="#{ color }"][#{ linkHoverAttrName }]#{ modifier }:hover
+      """
+      linkSmallSelector = linkSelector linkSmallAttrName
+      linkLargeSelector = linkSelector linkLargeAttrName
 
       styles += """
-        #{ linkSelector }, #{ linkSelector }:visited {
+        #{ linkSelector() }, #{ linkSelector ':visited' } {
           color: #{ color };
           text-decoration: none !important;
           text-shadow: 0.03em 0 #{ backgroundColor }, -0.03em 0 #{ backgroundColor }, 0 0.03em #{ backgroundColor }, 0 -0.03em #{ backgroundColor }, 0.06em 0 #{ backgroundColor }, -0.06em 0 #{ backgroundColor }, 0.09em 0 #{ backgroundColor }, -0.09em 0 #{ backgroundColor }, 0.12em 0 #{ backgroundColor }, -0.12em 0 #{ backgroundColor }, 0.15em 0 #{ backgroundColor }, -0.15em 0 #{ backgroundColor };
@@ -181,26 +186,59 @@ init = (options) ->
           background-position: 0% 89%, 100% 89%, 0% 89%;
         }
 
-        #{ linkSmallSelector } {
+        #{ linkSelector "[#{ linkSmallAttrName }]" } {
           background-position: 0% 96%, 100% 96%, 0% 96%;
         }
 
-        #{ linkLargeSelector } {
+        #{ linkSelector "[#{ linkLargeAttrName }]" } {
           background-position: 0% 86%, 100% 86%, 0% 86%;
         }
 
-        #{ linkSelector }::selection {
+        #{ linkSelector '::selection' } {
           text-shadow: 0.03em 0 #{ selectionColor }, -0.03em 0 #{ selectionColor }, 0 0.03em #{ selectionColor }, 0 -0.03em #{ selectionColor }, 0.06em 0 #{ selectionColor }, -0.06em 0 #{ selectionColor }, 0.09em 0 #{ selectionColor }, -0.09em 0 #{ selectionColor }, 0.12em 0 #{ selectionColor }, -0.12em 0 #{ selectionColor }, 0.15em 0 #{ selectionColor }, -0.15em 0 #{ selectionColor };
           background: #{ selectionColor };
         }
 
-        #{ linkSelector }::-moz-selection {
+        #{ linkSelector '::-moz-selection' } {
           text-shadow: 0.03em 0 #{ selectionColor }, -0.03em 0 #{ selectionColor }, 0 0.03em #{ selectionColor }, 0 -0.03em #{ selectionColor }, 0.06em 0 #{ selectionColor }, -0.06em 0 #{ selectionColor }, 0.09em 0 #{ selectionColor }, -0.09em 0 #{ selectionColor }, 0.12em 0 #{ selectionColor }, -0.12em 0 #{ selectionColor }, 0.15em 0 #{ selectionColor }, -0.15em 0 #{ selectionColor };
           background: #{ selectionColor };
         }
       """
 
   styleNode.innerHTML = styles
+
+initLinkOnHover = ->
+  link = @
+
+  alreadyMadeSmart = link.hasAttribute linkHoverAttrName
+
+  unless alreadyMadeSmart
+    madeSmart = initLink link
+
+    if madeSmart
+      link.setAttribute linkHoverAttrName, ''
+
+      renderStyles()
+
+init = (options) ->
+  startTime = time()
+
+  links = document.querySelectorAll "#{ if options.location then options.location + ' ' else '' }a"
+  return unless links.length
+
+  linkContainers = {}
+  for link in links
+    madeSmart = initLink link
+
+    if madeSmart
+      link.setAttribute linkAlwysAttrName, ''
+
+    else
+      link.removeEventListener 'mouseover', initLinkOnHover
+      link.addEventListener 'mouseover', initLinkOnHover
+
+  renderStyles()
+
   document.body.appendChild styleNode
 
   performanceTimes.push time() - startTime
@@ -208,7 +246,10 @@ init = (options) ->
 destroy = ->
   styleNode.parentNode?.removeChild styleNode
 
-  for attribute in [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, containerIdAttrName]
+  Array::forEach.call document.querySelectorAll("[#{ linkHoverAttrName }]"), (node) ->
+    node.removeEventListener initLinkOnHover
+
+  for attribute in [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkAlwysAttrName, linkHoverAttrName, containerIdAttrName]
     Array::forEach.call document.querySelectorAll("[#{ attribute }]"), (node) ->
       node.removeAttribute attribute
 
