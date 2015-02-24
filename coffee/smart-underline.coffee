@@ -12,7 +12,7 @@ linkColorAttrName = 'data-smart-underline-link-color'
 linkSmallAttrName = 'data-smart-underline-link-small'
 linkLargeAttrName = 'data-smart-underline-link-large'
 linkAlwysAttrName = 'data-smart-underline-link-always'
-linkBgPosAttrName = 'data-smart-underline-link-background-position-y'
+linkBgPosAttrName = 'data-smart-underline-link-background-position'
 linkHoverAttrName = 'data-smart-underline-link-hover'
 containerIdAttrName = 'data-smart-underline-container-id'
 
