@@ -1,5 +1,5 @@
 (function() {
-  var PHI, backgroundPositionYCache, calculateBaselineYRatioFirefox, calculateTextHighestY, calculateTypeMetrics, clearCanvas, containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, getBackgroundColor, getBackgroundColorNode, getLinkColor, getUnderlineBackgroundPositionY, hasValidLinkContent, init, initLink, initLinkOnHover, isTransparent, linkAlwysAttrName, linkBgPosAttrName, linkColorAttrName, linkContainers, linkHoverAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, renderStyles, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
+  var PHI, backgroundPositionYCache, calculateBaselineYRatio, calculateTextHighestY, calculateTypeMetrics, clearCanvas, containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, getBackgroundColor, getBackgroundColorNode, getLinkColor, getUnderlineBackgroundPositionY, hasValidLinkContent, init, initLink, initLinkOnHover, isTransparent, linkAlwysAttrName, linkBgPosAttrName, linkColorAttrName, linkContainers, linkHoverAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, renderStyles, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
 
   window.SmartUnderline = {
     init: function() {},
@@ -93,7 +93,7 @@
     };
   };
 
-  calculateBaselineYRatioFirefox = function(node) {
+  calculateBaselineYRatio = function(node) {
     var baselinePositionY, baselineYRatio, height, large, largeRect, small, smallRect, test;
     test = document.createElement('div');
     test.style.display = 'block';
@@ -144,7 +144,7 @@
     textHeight = clientRects[0].height - adjustment;
     if (-1 < navigator.userAgent.toLowerCase().indexOf('firefox')) {
       adjustment = .98;
-      baselineYRatio = calculateBaselineYRatioFirefox(node);
+      baselineYRatio = calculateBaselineYRatio(node);
       baselineY = baselineYRatio * textHeight * adjustment;
     }
     descenderY = baselineY + descenderHeight;

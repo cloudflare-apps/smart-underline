@@ -76,7 +76,7 @@ calculateTypeMetrics = (computedStyle) ->
 
   { baselineY, descenderHeight }
 
-calculateBaselineYRatioFirefox = (node) ->
+calculateBaselineYRatio = (node) ->
   # Roughly taken from underline.js
   # http://git.io/A113
   test = document.createElement 'div'
@@ -141,7 +141,7 @@ getUnderlineBackgroundPositionY = (node) ->
   # so we use a DOM technique to approximate it
   if -1 < navigator.userAgent.toLowerCase().indexOf 'firefox'
     adjustment = .98
-    baselineYRatio = calculateBaselineYRatioFirefox node
+    baselineYRatio = calculateBaselineYRatio node
     baselineY = baselineYRatio * textHeight * adjustment
 
   descenderY = baselineY + descenderHeight
