@@ -4,12 +4,15 @@ window.SmartUnderline =
 
 return unless window['getComputedStyle'] and document.documentElement.getAttribute
 
+PHI = 1.618034
+
 selectionColor = '#b4d5fe'
 
 linkColorAttrName = 'data-smart-underline-link-color'
 linkSmallAttrName = 'data-smart-underline-link-small'
 linkLargeAttrName = 'data-smart-underline-link-large'
 linkAlwysAttrName = 'data-smart-underline-link-always'
+linkBgPosAttrName = 'data-smart-underline-link-background-position-y'
 linkHoverAttrName = 'data-smart-underline-link-hover'
 containerIdAttrName = 'data-smart-underline-container-id'
 
@@ -20,6 +23,149 @@ linkContainers = {}
 uniqueLinkContainerID = do ->
   id = 0
   return -> id += 1
+
+clearCanvas = (canvas, context) ->
+  context.clearRect 0, 0, canvas.width, canvas.height
+
+calculateTextHighestY = (text, canvas, context) ->
+  clearCanvas canvas, context
+
+  context.fillStyle = 'red'
+  textWidth = context.measureText(text).width
+  context.fillText text, 0, 0
+
+  highestY = undefined
+
+  for x in [0..textWidth]
+    for y in [0..canvas.height]
+      pixelData = context.getImageData x, y, x + 1, y + 1
+
+      r = pixelData.data[0]
+      alpha = pixelData.data[3]
+
+      if r is 255 and alpha > 50 # TODO - tune this alpha?
+        highestY = y if not highestY
+
+        highestY = y if y > highestY
+
+  clearCanvas canvas, context
+
+  highestY
+
+calculateTypeMetrics = (computedStyle) ->
+  canvas = document.createElement 'canvas'
+  context = canvas.getContext '2d'
+
+  # Ensure that the canvas size is large enough to
+  # render the glyphs. 2 * fontSize is sufficient.
+  canvas.height = canvas.width = 2 * parseInt computedStyle.fontSize, 10
+
+  context.textBaseline = 'top'
+  context.textAlign = 'start'
+  context.fontStretch = 1
+  context.angle = 0
+
+  # We’d love to use `computedStyle.font` here,
+  # but Firefox has issues... (TODO: file bug report)
+  context.font = "#{ computedStyle.fontVariant } #{ computedStyle.fontStyle } #{ computedStyle.fontWeight } #{ computedStyle.fontSize }/#{ computedStyle.lineHeight } #{ computedStyle.fontFamily }"
+
+  baselineY = calculateTextHighestY 'I', canvas, context
+
+  gLowestPixel = calculateTextHighestY 'g', canvas, context
+  descenderHeight = gLowestPixel - baselineY
+
+  { baselineY, descenderHeight }
+
+calculateBaselineYRatioFirefox = (node) ->
+  # Roughly taken from underline.js
+  # http://git.io/A113
+  test = document.createElement 'div'
+  test.style.display = 'block'
+  test.style.position = 'absolute'
+  test.style.bottom = 0
+  test.style.right = 0
+  test.style.width = 0
+  test.style.height = 0
+  test.style.margin = 0
+  test.style.padding = 0
+  test.style.visibility = 'hidden'
+  test.style.overflow = 'hidden'
+
+  small = document.createElement 'span'
+  large = document.createElement 'span'
+
+  small.style.display = 'inline'
+  large.style.display = 'inline'
+
+  # Large numbers help improve accuracy.
+  small.style.fontSize = '0px'
+  large.style.fontSize = '2000px'
+
+  small.innerHTML = 'X'
+  large.innerHTML = 'X'
+
+  test.appendChild small
+  test.appendChild large
+
+  node.appendChild test
+  smallRect = small.getBoundingClientRect()
+  largeRect = large.getBoundingClientRect()
+  node.removeChild test
+
+  # Calculate where the baseline was, percentage-wise.
+  baselinePositionY = smallRect.top - largeRect.top
+  height = largeRect.height
+
+  baselineYRatio = Math.abs baselinePositionY / height
+
+backgroundPositionYCache = {}
+
+getUnderlineBackgroundPositionY = (node) ->
+  computedStyle = getComputedStyle node
+
+  cacheKey = "font:#{ computedStyle.fontFamily }size:#{ computedStyle.fontSize }weight:#{ computedStyle.fontWeight }"
+  cache = backgroundPositionYCache[cacheKey]
+
+  return cache if cache
+
+  { baselineY, descenderHeight } = calculateTypeMetrics computedStyle
+
+  clientRects = node.getClientRects()
+  return unless clientRects?.length
+
+  adjustment = 1
+  textHeight = clientRects[0].height - adjustment
+
+  # Detect baseline using canvas in all but FF due to
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=737852
+  # so we use a DOM technique to approximate it
+  if -1 < navigator.userAgent.toLowerCase().indexOf 'firefox'
+    adjustment = .98
+    baselineYRatio = calculateBaselineYRatioFirefox node
+    baselineY = baselineYRatio * textHeight * adjustment
+
+  descenderY = baselineY + descenderHeight
+
+  fontSizeInt = parseInt computedStyle.fontSize, 10
+
+  minimumCloseness = 3
+
+  backgroundPositionY = baselineY + Math.max minimumCloseness, descenderHeight / PHI
+
+  if descenderHeight is 4
+    backgroundPositionY = descenderY - 1
+
+  if descenderHeight is 3
+    backgroundPositionY = descenderY
+
+  backgroundPositionYPercent = Math.round 100 * backgroundPositionY / textHeight
+
+  if descenderHeight > 2 and fontSizeInt > 10 and backgroundPositionYPercent <= 100
+    backgroundPositionYCache[cacheKey] = backgroundPositionYPercent
+    backgroundPositionYCache[cacheKey + 'node'] = node
+    return backgroundPositionYPercent
+
+  return
 
 isTransparent = (color) ->
   return true if color in ['transparent', 'rgba(0, 0, 0, 0)']
@@ -101,7 +247,7 @@ countParentContainers = (node, count = 0) ->
     if parentNode.hasAttribute containerIdAttrName
       count += 1
 
-    return count + countParentContainers(parentNode)
+    return count + countParentContainers parentNode
 
 sortContainersForCSSPrecendence = (containers) ->
   sorted = []
@@ -121,31 +267,29 @@ initLink = (link) ->
   style = getComputedStyle link
   fontSize = parseFloat style.fontSize
 
-  if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 8 and not hasValidLinkContent(link)
+  if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 10 and not hasValidLinkContent link
     container = getBackgroundColorNode link
 
     if container
-      link.setAttribute linkColorAttrName, getLinkColor(link)
+      backgroundPositionY = getUnderlineBackgroundPositionY link
 
-      if fontSize <= 14
-        link.setAttribute linkSmallAttrName, ''
+      if backgroundPositionY
+        link.setAttribute linkColorAttrName, getLinkColor link
+        link.setAttribute linkBgPosAttrName, backgroundPositionY
 
-      if fontSize >= 20
-        link.setAttribute linkLargeAttrName, ''
+        id = container.getAttribute containerIdAttrName
 
-      id = container.getAttribute containerIdAttrName
+        if id
+          linkContainers[id].links.push link
+        else
+          id = uniqueLinkContainerID()
+          container.setAttribute containerIdAttrName, id
+          linkContainers[id] =
+            id: id
+            container: container
+            links: [link]
 
-      if id
-        linkContainers[id].links.push link
-      else
-        id = uniqueLinkContainerID()
-        container.setAttribute containerIdAttrName, id
-        linkContainers[id] =
-          id: id
-          container: container
-          links: [link]
-
-      return true
+        return true
 
   return false
 
@@ -154,9 +298,14 @@ renderStyles = ->
 
   containersWithPrecedence = sortContainersForCSSPrecendence linkContainers
 
+  linkBackgroundPositionYs = {}
+
   for container in containersWithPrecedence
     linkColors = {}
-    linkColors[getLinkColor link] = true for link in container.links
+
+    for link in container.links
+      linkColors[getLinkColor link] = true
+      linkBackgroundPositionYs[getUnderlineBackgroundPositionY link] = true
 
     backgroundColor = getBackgroundColor container.container
 
@@ -165,8 +314,6 @@ renderStyles = ->
         [#{ containerIdAttrName }="#{ container.id }"] a[#{ linkColorAttrName }="#{ color }"][#{ linkAlwysAttrName }]#{ modifier },
         [#{ containerIdAttrName }="#{ container.id }"] a[#{ linkColorAttrName }="#{ color }"][#{ linkHoverAttrName }]#{ modifier }:hover
       """
-      linkSmallSelector = linkSelector linkSmallAttrName
-      linkLargeSelector = linkSelector linkLargeAttrName
 
       styles += """
         #{ linkSelector() }, #{ linkSelector ':visited' } {
@@ -183,15 +330,6 @@ renderStyles = ->
           -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
           background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
           background-repeat: no-repeat, no-repeat, repeat-x;
-          background-position: 0% 89%, 100% 89%, 0% 89%;
-        }
-
-        #{ linkSelector "[#{ linkSmallAttrName }]" } {
-          background-position: 0% 96%, 100% 96%, 0% 96%;
-        }
-
-        #{ linkSelector "[#{ linkLargeAttrName }]" } {
-          background-position: 0% 86%, 100% 86%, 0% 86%;
         }
 
         #{ linkSelector '::selection' } {
@@ -204,6 +342,13 @@ renderStyles = ->
           background: #{ selectionColor };
         }
       """
+
+  for backgroundPositionY of linkBackgroundPositionYs
+    styles += """
+      a[#{ linkBgPosAttrName }="#{ backgroundPositionY }"] {
+        background-position: 0% #{ backgroundPositionY }%, 100% #{ backgroundPositionY }%, 0% #{ backgroundPositionY }%;
+      }
+    """
 
   styleNode.innerHTML = styles
 
