@@ -162,7 +162,6 @@ getUnderlineBackgroundPositionY = (node) ->
 
   if descenderHeight > 2 and fontSizeInt > 10 and backgroundPositionYPercent <= 100
     backgroundPositionYCache[cacheKey] = backgroundPositionYPercent
-    backgroundPositionYCache[cacheKey + 'node'] = node
     return backgroundPositionYPercent
 
   return

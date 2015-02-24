@@ -160,7 +160,6 @@
     backgroundPositionYPercent = Math.round(100 * backgroundPositionY / textHeight);
     if (descenderHeight > 2 && fontSizeInt > 10 && backgroundPositionYPercent <= 100) {
       backgroundPositionYCache[cacheKey] = backgroundPositionYPercent;
-      backgroundPositionYCache[cacheKey + 'node'] = node;
       return backgroundPositionYPercent;
     }
   };
