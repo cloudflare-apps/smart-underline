@@ -49,14 +49,14 @@
   };
 
   calculateTextHighestY = function(text, canvas, context) {
-    var alpha, highestY, pixelData, r, textWidth, x, y, _i, _j, _ref;
+    var alpha, highestY, i, j, pixelData, r, ref, ref1, textWidth, x, y;
     clearCanvas(canvas, context);
     context.fillStyle = 'red';
     textWidth = context.measureText(text).width;
     context.fillText(text, 0, 0);
     highestY = void 0;
-    for (x = _i = 0; 0 <= textWidth ? _i <= textWidth : _i >= textWidth; x = 0 <= textWidth ? ++_i : --_i) {
-      for (y = _j = 0, _ref = canvas.height; 0 <= _ref ? _j <= _ref : _j >= _ref; y = 0 <= _ref ? ++_j : --_j) {
+    for (x = i = 0, ref = textWidth; 0 <= ref ? i <= ref : i >= ref; x = 0 <= ref ? ++i : --i) {
+      for (y = j = 0, ref1 = canvas.height; 0 <= ref1 ? j <= ref1 : j >= ref1; y = 0 <= ref1 ? ++j : --j) {
         pixelData = context.getImageData(x, y, x + 1, y + 1);
         r = pixelData.data[0];
         alpha = pixelData.data[3];
@@ -83,7 +83,7 @@
     context.textAlign = 'start';
     context.fontStretch = 1;
     context.angle = 0;
-    context.font = "" + computedStyle.fontVariant + " " + computedStyle.fontStyle + " " + computedStyle.fontWeight + " " + computedStyle.fontSize + "/" + computedStyle.lineHeight + " " + computedStyle.fontFamily;
+    context.font = computedStyle.fontVariant + " " + computedStyle.fontStyle + " " + computedStyle.fontWeight + " " + computedStyle.fontSize + "/" + computedStyle.lineHeight + " " + computedStyle.fontFamily;
     baselineY = calculateTextHighestY('I', canvas, context);
     gLowestPixel = calculateTextHighestY('g', canvas, context);
     descenderHeight = gLowestPixel - baselineY;
@@ -130,14 +130,14 @@
   backgroundPositionYCache = {};
 
   getUnderlineBackgroundPositionY = function(node) {
-    var adjustment, backgroundPositionY, backgroundPositionYPercent, baselineY, baselineYRatio, cache, cacheKey, clientRects, computedStyle, descenderHeight, descenderY, fontSizeInt, minimumCloseness, textHeight, _ref;
+    var adjustment, backgroundPositionY, backgroundPositionYPercent, baselineY, baselineYRatio, cache, cacheKey, clientRects, computedStyle, descenderHeight, descenderY, fontSizeInt, minimumCloseness, ref, textHeight;
     computedStyle = getComputedStyle(node);
     cacheKey = "font:" + computedStyle.fontFamily + "size:" + computedStyle.fontSize + "weight:" + computedStyle.fontWeight;
     cache = backgroundPositionYCache[cacheKey];
     if (cache) {
       return cache;
     }
-    _ref = calculateTypeMetrics(computedStyle), baselineY = _ref.baselineY, descenderHeight = _ref.descenderHeight;
+    ref = calculateTypeMetrics(computedStyle), baselineY = ref.baselineY, descenderHeight = ref.descenderHeight;
     clientRects = node.getClientRects();
     if (!(clientRects != null ? clientRects.length : void 0)) {
       return;
@@ -206,11 +206,11 @@
   };
 
   containsInvalidElements = function(node) {
-    var child, _i, _len, _ref, _ref1, _ref2;
-    _ref = node.children;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      child = _ref[_i];
-      if ((_ref1 = (_ref2 = child.tagName) != null ? _ref2.toLowerCase() : void 0) === 'img' || _ref1 === 'video' || _ref1 === 'canvas' || _ref1 === 'embed' || _ref1 === 'object' || _ref1 === 'iframe') {
+    var child, i, len, ref, ref1, ref2;
+    ref = node.children;
+    for (i = 0, len = ref.length; i < len; i++) {
+      child = ref[i];
+      if ((ref1 = (ref2 = child.tagName) != null ? ref2.toLowerCase() : void 0) === 'img' || ref1 === 'video' || ref1 === 'canvas' || ref1 === 'embed' || ref1 === 'object' || ref1 === 'iframe') {
         return true;
       }
       return containsInvalidElements(child);
@@ -219,10 +219,10 @@
   };
 
   containsAnyNonInlineElements = function(node) {
-    var child, style, _i, _len, _ref;
-    _ref = node.children;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      child = _ref[_i];
+    var child, i, len, ref, style;
+    ref = node.children;
+    for (i = 0, len = ref.length; i < len; i++) {
+      child = ref[i];
       style = getComputedStyle(child);
       if (style.display !== 'inline') {
         return true;
@@ -316,16 +316,16 @@
   };
 
   renderStyles = function() {
-    var backgroundColor, backgroundPositionY, color, container, containersWithPrecedence, link, linkBackgroundPositionYs, linkColors, linkSelector, styles, _i, _j, _len, _len1, _ref;
+    var backgroundColor, backgroundPositionY, color, container, containersWithPrecedence, i, j, len, len1, link, linkBackgroundPositionYs, linkColors, linkSelector, ref, styles;
     styles = '';
     containersWithPrecedence = sortContainersForCSSPrecendence(linkContainers);
     linkBackgroundPositionYs = {};
-    for (_i = 0, _len = containersWithPrecedence.length; _i < _len; _i++) {
-      container = containersWithPrecedence[_i];
+    for (i = 0, len = containersWithPrecedence.length; i < len; i++) {
+      container = containersWithPrecedence[i];
       linkColors = {};
-      _ref = container.links;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        link = _ref[_j];
+      ref = container.links;
+      for (j = 0, len1 = ref.length; j < len1; j++) {
+        link = ref[j];
         linkColors[getLinkColor(link)] = true;
         linkBackgroundPositionYs[getUnderlineBackgroundPositionY(link)] = true;
       }
@@ -337,7 +337,7 @@
           }
           return "[" + containerIdAttrName + "=\"" + container.id + "\"] a[" + linkColorAttrName + "=\"" + color + "\"][" + linkAlwysAttrName + "]" + modifier + ",\n[" + containerIdAttrName + "=\"" + container.id + "\"] a[" + linkColorAttrName + "=\"" + color + "\"][" + linkHoverAttrName + "]" + modifier + ":hover";
         };
-        styles += "" + (linkSelector()) + ", " + (linkSelector(':visited')) + " {\n  color: " + color + ";\n  text-decoration: none !important;\n  text-shadow: 0.03em 0 " + backgroundColor + ", -0.03em 0 " + backgroundColor + ", 0 0.03em " + backgroundColor + ", 0 -0.03em " + backgroundColor + ", 0.06em 0 " + backgroundColor + ", -0.06em 0 " + backgroundColor + ", 0.09em 0 " + backgroundColor + ", -0.09em 0 " + backgroundColor + ", 0.12em 0 " + backgroundColor + ", -0.12em 0 " + backgroundColor + ", 0.15em 0 " + backgroundColor + ", -0.15em 0 " + backgroundColor + ";\n  background-color: transparent;\n  background-image: -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + color + ", " + color + ");\n  background-image: -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + color + ", " + color + ");\n  background-image: -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + color + ", " + color + ");\n  background-image: -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + color + ", " + color + ");\n  background-image: linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + color + ", " + color + ");\n  -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-repeat: no-repeat, no-repeat, repeat-x;\n}\n\n" + (linkSelector('::selection')) + " {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}\n\n" + (linkSelector('::-moz-selection')) + " {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}";
+        styles += (linkSelector()) + ", " + (linkSelector(':visited')) + " {\n  color: " + color + ";\n  text-decoration: none !important;\n  text-shadow: 0.03em 0 " + backgroundColor + ", -0.03em 0 " + backgroundColor + ", 0 0.03em " + backgroundColor + ", 0 -0.03em " + backgroundColor + ", 0.06em 0 " + backgroundColor + ", -0.06em 0 " + backgroundColor + ", 0.09em 0 " + backgroundColor + ", -0.09em 0 " + backgroundColor + ", 0.12em 0 " + backgroundColor + ", -0.12em 0 " + backgroundColor + ", 0.15em 0 " + backgroundColor + ", -0.15em 0 " + backgroundColor + ";\n  background-color: transparent;\n  background-image: -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -webkit-linear-gradient(" + color + ", " + color + ");\n  background-image: -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -moz-linear-gradient(" + color + ", " + color + ");\n  background-image: -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -o-linear-gradient(" + color + ", " + color + ");\n  background-image: -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + backgroundColor + ", " + backgroundColor + "), -ms-linear-gradient(" + color + ", " + color + ");\n  background-image: linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + backgroundColor + ", " + backgroundColor + "), linear-gradient(" + color + ", " + color + ");\n  -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-size: 0.05em 1px, 0.05em 1px, 1px 1px;\n  background-repeat: no-repeat, no-repeat, repeat-x;\n}\n\n" + (linkSelector('::selection')) + " {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}\n\n" + (linkSelector('::-moz-selection')) + " {\n  text-shadow: 0.03em 0 " + selectionColor + ", -0.03em 0 " + selectionColor + ", 0 0.03em " + selectionColor + ", 0 -0.03em " + selectionColor + ", 0.06em 0 " + selectionColor + ", -0.06em 0 " + selectionColor + ", 0.09em 0 " + selectionColor + ", -0.09em 0 " + selectionColor + ", 0.12em 0 " + selectionColor + ", -0.12em 0 " + selectionColor + ", 0.15em 0 " + selectionColor + ", -0.15em 0 " + selectionColor + ";\n  background: " + selectionColor + ";\n}";
       }
     }
     for (backgroundPositionY in linkBackgroundPositionYs) {
@@ -360,15 +360,15 @@
   };
 
   init = function(options) {
-    var link, links, madeSmart, startTime, _i, _len;
+    var i, len, link, links, madeSmart, startTime;
     startTime = time();
-    links = document.querySelectorAll("" + (options.location ? options.location + ' ' : '') + "a");
+    links = document.querySelectorAll((options.location ? options.location + ' ' : '') + "a");
     if (!links.length) {
       return;
     }
     linkContainers = {};
-    for (_i = 0, _len = links.length; _i < _len; _i++) {
-      link = links[_i];
+    for (i = 0, len = links.length; i < len; i++) {
+      link = links[i];
       madeSmart = initLink(link);
       if (madeSmart) {
         link.setAttribute(linkAlwysAttrName, '');
@@ -383,22 +383,22 @@
   };
 
   destroy = function() {
-    var attribute, _i, _len, _ref, _ref1, _results;
-    if ((_ref = styleNode.parentNode) != null) {
-      _ref.removeChild(styleNode);
+    var attribute, i, len, ref, ref1, results;
+    if ((ref = styleNode.parentNode) != null) {
+      ref.removeChild(styleNode);
     }
     Array.prototype.forEach.call(document.querySelectorAll("[" + linkHoverAttrName + "]"), function(node) {
       return node.removeEventListener(initLinkOnHover);
     });
-    _ref1 = [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkAlwysAttrName, linkHoverAttrName, containerIdAttrName];
-    _results = [];
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      attribute = _ref1[_i];
-      _results.push(Array.prototype.forEach.call(document.querySelectorAll("[" + attribute + "]"), function(node) {
+    ref1 = [linkColorAttrName, linkSmallAttrName, linkLargeAttrName, linkAlwysAttrName, linkHoverAttrName, containerIdAttrName];
+    results = [];
+    for (i = 0, len = ref1.length; i < len; i++) {
+      attribute = ref1[i];
+      results.push(Array.prototype.forEach.call(document.querySelectorAll("[" + attribute + "]"), function(node) {
         return node.removeAttribute(attribute);
       }));
     }
-    return _results;
+    return results;
   };
 
   window.SmartUnderline = {
