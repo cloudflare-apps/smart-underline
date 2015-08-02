@@ -106,6 +106,8 @@
     test.style.padding = 0;
     test.style.visibility = 'hidden';
     test.style.overflow = 'hidden';
+    test.style.wordWrap = 'normal';
+    test.style.whiteSpace = 'nowrap';
     small = document.createElement('span');
     large = document.createElement('span');
     small.style.display = 'inline';
