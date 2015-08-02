@@ -1,6 +1,8 @@
 {
-  "name": "SmartUnderline",
-  "version": "3.0.0",
+  "name": "smart-underline",
+  "main": [
+    "js/smart-underline.js"
+  ],
   "ignore": [
     "jade/",
     "index.html",
