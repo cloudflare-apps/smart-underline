@@ -122,10 +122,34 @@ calculateBaselineYRatio = (node) ->
 
 backgroundPositionYCache = {}
 
+getFirstAvailableFont = (fontFamily) ->
+  fonts = fontFamily.split ','
+
+  for font in fonts
+    if fontAvailable font
+      return font
+
+  return false
+
+fontAvailable = (font) ->
+  canvas = document.createElement 'canvas'
+  context = canvas.getContext '2d'
+  text = 'abcdefghijklmnopqrstuvwxyz0123456789'
+  context.font = '72px monospace'
+  baselineSize = context.measureText(text).width
+  context.font = "72px #{ font }, monospace"
+  newSize = context.measureText(text).width
+  return false if newSize is baselineSize
+  return true
+
 getUnderlineBackgroundPositionY = (node) ->
   computedStyle = getComputedStyle node
 
-  cacheKey = "font:#{ computedStyle.fontFamily }size:#{ computedStyle.fontSize }weight:#{ computedStyle.fontWeight }"
+  firstAvailableFont = getFirstAvailableFont computedStyle.fontFamily
+  if not firstAvailableFont
+    cacheKey = "#{ Math.random() }" # AKA, don’t cache
+  else
+    cacheKey = "font:#{ firstAvailableFont }size:#{ computedStyle.fontSize }weight:#{ computedStyle.fontWeight }"
   cache = backgroundPositionYCache[cacheKey]
 
   return cache if cache
