@@ -1,5 +1,5 @@
 (function() {
-  var PHI, backgroundPositionYCache, calculateBaselineYRatio, calculateTextHighestY, calculateTypeMetrics, clearCanvas, containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, getBackgroundColor, getBackgroundColorNode, getLinkColor, getUnderlineBackgroundPositionY, hasValidLinkContent, init, initLink, initLinkOnHover, isTransparent, linkAlwysAttrName, linkBgPosAttrName, linkColorAttrName, linkContainers, linkHoverAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, renderStyles, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
+  var PHI, backgroundPositionYCache, calculateBaselineYRatio, calculateTextHighestY, calculateTypeMetrics, clearCanvas, containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, fontAvailable, getBackgroundColor, getBackgroundColorNode, getFirstAvailableFont, getLinkColor, getUnderlineBackgroundPositionY, hasValidLinkContent, init, initLink, initLinkOnHover, isTransparent, linkAlwysAttrName, linkBgPosAttrName, linkColorAttrName, linkContainers, linkHoverAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, renderStyles, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
 
   window.SmartUnderline = {
     init: function() {},
@@ -129,10 +129,42 @@
 
   backgroundPositionYCache = {};
 
+  getFirstAvailableFont = function(fontFamily) {
+    var font, fonts, i, len;
+    fonts = fontFamily.split(',');
+    for (i = 0, len = fonts.length; i < len; i++) {
+      font = fonts[i];
+      if (fontAvailable(font)) {
+        return font;
+      }
+    }
+    return false;
+  };
+
+  fontAvailable = function(font) {
+    var baselineSize, canvas, context, newSize, text;
+    canvas = document.createElement('canvas');
+    context = canvas.getContext('2d');
+    text = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    context.font = '72px monospace';
+    baselineSize = context.measureText(text).width;
+    context.font = "72px " + font + ", monospace";
+    newSize = context.measureText(text).width;
+    if (newSize === baselineSize) {
+      return false;
+    }
+    return true;
+  };
+
   getUnderlineBackgroundPositionY = function(node) {
-    var adjustment, backgroundPositionY, backgroundPositionYPercent, baselineY, baselineYRatio, cache, cacheKey, clientRects, computedStyle, descenderHeight, descenderY, fontSizeInt, minimumCloseness, ref, textHeight;
+    var adjustment, backgroundPositionY, backgroundPositionYPercent, baselineY, baselineYRatio, cache, cacheKey, clientRects, computedStyle, descenderHeight, descenderY, firstAvailableFont, fontSizeInt, minimumCloseness, ref, textHeight;
     computedStyle = getComputedStyle(node);
-    cacheKey = "font:" + computedStyle.fontFamily + "size:" + computedStyle.fontSize + "weight:" + computedStyle.fontWeight;
+    firstAvailableFont = getFirstAvailableFont(computedStyle.fontFamily);
+    if (!firstAvailableFont) {
+      cacheKey = "" + (Math.random());
+    } else {
+      cacheKey = "font:" + firstAvailableFont + "size:" + computedStyle.fontSize + "weight:" + computedStyle.fontWeight;
+    }
     cache = backgroundPositionYCache[cacheKey];
     if (cache) {
       return cache;
