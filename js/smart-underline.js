@@ -321,7 +321,7 @@
     var backgroundPositionY, container, fontSize, id, style;
     style = getComputedStyle(link);
     fontSize = parseFloat(style.fontSize);
-    if (style.textDecoration === 'underline' && style.display === 'inline' && fontSize >= 10 && !hasValidLinkContent(link)) {
+    if ((style.textDecorationStyle || style.textDecoration) === 'underline' && style.display === 'inline' && fontSize >= 10 && !hasValidLinkContent(link)) {
       container = getBackgroundColorNode(link);
       if (container) {
         backgroundPositionY = getUnderlineBackgroundPositionY(link);

@@ -292,7 +292,7 @@ initLink = (link) ->
   style = getComputedStyle link
   fontSize = parseFloat style.fontSize
 
-  if style.textDecoration is 'underline' and style.display is 'inline' and fontSize >= 10 and not hasValidLinkContent link
+  if (style.textDecorationStyle or style.textDecoration) is 'underline' and style.display is 'inline' and fontSize >= 10 and not hasValidLinkContent link
     container = getBackgroundColorNode link
 
     if container
