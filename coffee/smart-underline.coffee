@@ -288,11 +288,16 @@ sortContainersForCSSPrecendence = (containers) ->
 
   return sorted
 
+isUnderlined = (style) ->
+  for property in ['textDecorationLine', 'textDecoration']
+    return true if style[property]?.match /\bunderline\b/
+  return false
+
 initLink = (link) ->
   style = getComputedStyle link
   fontSize = parseFloat style.fontSize
 
-  if (style.textDecorationStyle or style.textDecoration) is 'underline' and style.display is 'inline' and fontSize >= 10 and not hasValidLinkContent link
+  if isUnderlined(style) and style.display is 'inline' and fontSize >= 10 and not hasValidLinkContent link
     container = getBackgroundColorNode link
 
     if container

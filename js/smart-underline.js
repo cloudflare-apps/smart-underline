@@ -1,5 +1,5 @@
 (function() {
-  var PHI, backgroundPositionYCache, calculateBaselineYRatio, calculateTextHighestY, calculateTypeMetrics, clearCanvas, containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, fontAvailable, getBackgroundColor, getBackgroundColorNode, getFirstAvailableFont, getLinkColor, getUnderlineBackgroundPositionY, hasValidLinkContent, init, initLink, initLinkOnHover, isTransparent, linkAlwysAttrName, linkBgPosAttrName, linkColorAttrName, linkContainers, linkHoverAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, renderStyles, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
+  var PHI, backgroundPositionYCache, calculateBaselineYRatio, calculateTextHighestY, calculateTypeMetrics, clearCanvas, containerIdAttrName, containsAnyNonInlineElements, containsInvalidElements, countParentContainers, destroy, fontAvailable, getBackgroundColor, getBackgroundColorNode, getFirstAvailableFont, getLinkColor, getUnderlineBackgroundPositionY, hasValidLinkContent, init, initLink, initLinkOnHover, isTransparent, isUnderlined, linkAlwysAttrName, linkBgPosAttrName, linkColorAttrName, linkContainers, linkHoverAttrName, linkLargeAttrName, linkSmallAttrName, performanceTimes, renderStyles, selectionColor, sortContainersForCSSPrecendence, styleNode, time, uniqueLinkContainerID;
 
   window.SmartUnderline = {
     init: function() {},
@@ -317,11 +317,23 @@
     return sorted;
   };
 
+  isUnderlined = function(style) {
+    var i, len, property, ref, ref1;
+    ref = ['textDecorationLine', 'textDecoration'];
+    for (i = 0, len = ref.length; i < len; i++) {
+      property = ref[i];
+      if ((ref1 = style[property]) != null ? ref1.match(/\bunderline\b/) : void 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   initLink = function(link) {
     var backgroundPositionY, container, fontSize, id, style;
     style = getComputedStyle(link);
     fontSize = parseFloat(style.fontSize);
-    if ((style.textDecorationStyle || style.textDecoration) === 'underline' && style.display === 'inline' && fontSize >= 10 && !hasValidLinkContent(link)) {
+    if (isUnderlined(style) && style.display === 'inline' && fontSize >= 10 && !hasValidLinkContent(link)) {
       container = getBackgroundColorNode(link);
       if (container) {
         backgroundPositionY = getUnderlineBackgroundPositionY(link);
