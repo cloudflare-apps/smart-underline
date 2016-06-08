@@ -1,6 +1,5 @@
 {
   "name": "smart-underline",
-  "version": "3.0.2",
   "engines": {
     "node": ">=0.10.28"
   },
