@@ -19,7 +19,7 @@ body
   box-sizing border-box
   margin-left auto
   margin-right auto
-  font-family serifFonts
+  font-family sansSerifFonts
 
   @media (max-width 48em)
     padding 1em 1em
@@ -48,7 +48,7 @@ h1
   iframe
     display inline-block
     vertical-align middle
-    background #eee
+    background backgroundGray
     border-radius 5px
     margin-left auto
     margin-right auto
@@ -60,18 +60,7 @@ h1
 
     &.github
       width 12rem
-      margin-right 1rem
-
-      @media (max-width 36em)
-        width 100%
-        margin-right 0
-        margin-bottom .5rem
-
-    &.twitter
-      width 8.5rem
-
-      @media (max-width 36em)
-        width 100%
+      max-width 100%
 
 h2 a
 
@@ -86,7 +75,6 @@ h1 + h2
 h3
   text-align center
   font-size 1em
-  font-family "Futura", sans-serif
   font-weight bold
   text-transform uppercase
   letter-spacing .25em
@@ -155,22 +143,17 @@ section
   > *:last-child
     margin-bottom 0
 
-  &.about
-    background infoBackgroundColor
-    color darken(infoColor, 25%)
+  a
+    color inherit
 
-    a
-      color darken(infoColor, 50%)
+  &.about, &.before-and-after, &.notes
+    background backgroundGray
 
   &.install
     text-align center
 
     a
       text-decoration none
-      color inherit
-
-      &:hover
-        text-decoration underline
 
   &.diagram
     background transparent
@@ -182,22 +165,8 @@ section
       height 24em
       width 100%
 
-  &.before-and-after
-    background successBackgroundColor
-    color darken(successColor, 25%)
-
-    a
-      color darken(successColor, 50%)
-
-  &.limitations
-    background warnBackgroundColor
-    color darken(warnColor, 25%)
-
-    a
-      color darken(warnColor, 50%)
-
 footer
   text-align center
 
-  a.eager
-    color brandPink
+  a.cloudflare
+    color inherit

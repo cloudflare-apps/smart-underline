@@ -9,6 +9,6 @@
     "node_modules/"
   ],
   "devDependencies": {
-    "ui": "ssh://git@stash.cfops.it:7999/apps/ui.git#af5a971e32a028ebc92b5cbbf4f82bf405a05c97"
+    "ui": "ssh://git@stash.cfops.it:7999/apps/ui.git#263088ac533f7a03807ebfc787820dbc741ff240"
   }
 }

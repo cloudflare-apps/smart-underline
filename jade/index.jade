@@ -1,5 +1,3 @@
-include ../bower_components/ui/jade/typekit
-
 doctype html
 html
   head
@@ -8,13 +6,12 @@ html
     meta(name="viewport" content="width=device-width, initial-scale=1, user-scalable=no")
     link(href="./css/index.css" rel="stylesheet")
     link(href="/images/favicon.ico" rel="icon" type="image/x-icon")
-
-    +typekit
+    link(type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans")
 
     script(src="./js/smart-underline.js")
     script.
       SmartUnderline.init({
-        "location": ""
+        'location': ''
       })
 
   body
@@ -23,8 +20,7 @@ html
       h2 Descender-aware underlines for every browser
 
     .share
-      iframe(class="github" src="//stars.eager.io/github/spin/EagerIO/SmartUnderline?name=%20")
-      iframe(class="twitter" src="//stars.eager.io/twitter/spin/?name=%20&url=https://eager.io/showcase/SmartUnderline&text=Readable%20and%20beautiful%20underlines%20for%20every%20website&via=EagerIO")
+      iframe(class="github" src="https://stars.eager.io/github/spin/EagerIO/SmartUnderline?name=%20")
 
     section.about
       h3 About
@@ -91,7 +87,7 @@ html
         a(href)
           | 50 ways of joyfully piquing intrigue
 
-    section.limitations
+    section.notes
       h3 Notes
 
       p.indented
@@ -104,12 +100,10 @@ html
           | It requires that the text be on top of a solid background color.
         li
           | It makes an assumption about selection color, which is OS- and browser-dependent.
-        li
-          | Each smart-underlined link has 12 text-shadows drawn underneath it, which could potentially have performance penalties on mobile or older devices.
 
       p
         | Read more about <a href="https://eager.io/blog/smarter-link-underlines/">SmartUnderline on the Eager blog →</a>
 
     footer
       p
-        | Built by <a class="eager" href="https://eager.io">Eager</a>
+        | Built by <a class="cloudflare" href="https://cloudflare.com/apps/">Cloudflare Apps</a>
