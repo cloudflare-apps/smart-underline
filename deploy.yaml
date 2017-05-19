@@ -4,7 +4,7 @@ default:
   files: 'images/*,index.html,diagram/index.html'
 
 production:
-  bucket: 'eager.io'
+  bucket: 'cloudflareapps.com'
 
 development:
-  bucket: 'dev.eager.io'
+  bucket: 'dev.cloudflareapps.com'
