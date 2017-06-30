@@ -11,4 +11,4 @@ tricks to draw underlines in a more readable and beautiful way.
     width="150">
 </a>
 
-![Smart Underline Example](/media/examples.png?raw=true "Smart Underline Example")
+![Smart Underline Example](/images/examples.png?raw=true)
